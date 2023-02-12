@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import { useContext, memo } from "react";
+import { useContext, useState } from "react";
 import { backendData } from "./data";
 import { ThemeContext } from "./App";
 import { BoardContext } from "./BoardContext";
+import Modal from "./Modal";
 
 const StyledTaskTitle = styled.div`
   padding: 20px;
@@ -32,6 +33,8 @@ const calculatePendingSubtask = (subtasks) => {
 const BoardContent = ({ board }) => {
   const { theme } = useContext(ThemeContext);
   const { state } = useContext(BoardContext);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState({});
   const { selectedBoard } = state;
   if (selectedBoard?.columns.length === 0) {
     return (
@@ -41,27 +44,41 @@ const BoardContent = ({ board }) => {
       </div>
     );
   }
+  const onTaskClick = (task) => {
+    setShowModal(true);
+    setSelectedTask(task);
+  };
   return (
-    <StyledTaskTile theme={theme}>
-      {selectedBoard.columns.map((column, i) => {
-        return (
-          <div style={{ marginLeft: "10px" }}>
-            <div>{column.name}</div>
-            {column.tasks.map((task, index) => {
-              const completedTask = calculatePendingSubtask(task.subtasks);
-              return (
-                <StyledTaskTitle>
-                  <div>{task.title}</div>
-                  <div style={{ fontSize: "11px", marginTop: "10px" }}>
-                    {completedTask} of {task.subtasks.length} subtasks
-                  </div>
-                </StyledTaskTitle>
-              );
-            })}
+    <div>
+      <StyledTaskTile theme={theme}>
+        {selectedBoard.columns.map((column, i) => {
+          return (
+            <div style={{ marginLeft: "10px" }}>
+              <div>{column.name}</div>
+              {column.tasks.map((task, index) => {
+                const completedTask = calculatePendingSubtask(task.subtasks);
+                return (
+                  <StyledTaskTitle onClick={() => onTaskClick(task)}>
+                    <div>{task.title}</div>
+                    <div style={{ fontSize: "11px", marginTop: "10px" }}>
+                      {completedTask} of {task.subtasks.length} subtasks
+                    </div>
+                  </StyledTaskTitle>
+                );
+              })}
+            </div>
+          );
+        })}
+      </StyledTaskTile>
+      {showModal ? (
+        <Modal>
+          <div>
+            <div style={{ color: "white" }}>{selectedTask.title}</div>
+            <div style={{ color: "white" }}>{selectedTask.status}</div>
           </div>
-        );
-      })}
-    </StyledTaskTile>
+        </Modal>
+      ) : null}
+    </div>
   );
 };
 
