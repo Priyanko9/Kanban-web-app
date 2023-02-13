@@ -4,6 +4,7 @@ import { backendData } from "./data";
 import { ThemeContext } from "./App";
 import { BoardContext } from "./BoardContext";
 import Modal from "./Modal";
+import Checkbox from "./Checkbox/Checkbox";
 
 const StyledTaskTitle = styled.div`
   padding: 20px;
@@ -20,7 +21,7 @@ const StyledTaskTile = styled.div`
   display: flex;
 `;
 
-const calculatePendingSubtask = (subtasks) => {
+const calculateCompletedSubtask = (subtasks) => {
   let count = 0;
   subtasks.forEach((subtask, ele) => {
     if (subtask.isCompleted) {
@@ -56,7 +57,7 @@ const BoardContent = ({ board }) => {
             <div style={{ marginLeft: "10px" }}>
               <div>{column.name}</div>
               {column.tasks.map((task, index) => {
-                const completedTask = calculatePendingSubtask(task.subtasks);
+                const completedTask = calculateCompletedSubtask(task.subtasks);
                 return (
                   <StyledTaskTitle onClick={() => onTaskClick(task)}>
                     <div>{task.title}</div>
@@ -72,9 +73,59 @@ const BoardContent = ({ board }) => {
       </StyledTaskTile>
       {showModal ? (
         <Modal>
-          <div>
-            <div style={{ color: "white" }}>{selectedTask.title}</div>
-            <div style={{ color: "white" }}>{selectedTask.status}</div>
+          <div
+            style={{
+              background: "white",
+              padding: "20px",
+              position: "relative",
+            }}
+          >
+            <div style={{ marginBottom: "10px" }}>{selectedTask.title}</div>
+            <div style={{ marginBottom: "10px" }}>
+              {selectedTask.description}
+            </div>
+            <div>
+              <div>
+                Subtasks {calculateCompletedSubtask(selectedTask.subtasks)} of{" "}
+                {selectedTask.subtasks.length}
+              </div>
+              {selectedTask.subtasks.map((ele, index) => {
+                return (
+                  <div
+                    style={{
+                      background: "#E4EBFA",
+                      marginBottom: "5px",
+                      padding: "5px",
+                    }}
+                  >
+                    <Checkbox
+                      textLabel={ele.title}
+                      strikeThrough={true}
+                      checkedState={ele.isCompleted}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            <div>
+              <div>Status</div>
+              <div>
+                <select style={{ padding: "5px", width: "100%" }}>
+                  <option>{selectedTask.status}</option>
+                </select>
+              </div>
+            </div>
+            <div
+              onClick={() => setShowModal(false)}
+              style={{
+                position: "absolute",
+                /* align-self: flex-end; */
+                top: "10px",
+                right: "10px",
+              }}
+            >
+              X
+            </div>
           </div>
         </Modal>
       ) : null}
