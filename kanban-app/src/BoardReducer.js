@@ -18,9 +18,9 @@ export const BoardReducer = (state = initialState, action) => {
         data: { boards },
       } = state;
       const { selectedBoard } = payload;
-      const savedData = localStorage.getItem("appState");
+      const savedData = JSON.parse(localStorage.getItem("appState"));
       if (!savedData) {
-        localStorage.setItem("appState", state);
+        localStorage.setItem("appState", JSON.stringify(state));
       }
 
       return {
@@ -33,36 +33,59 @@ export const BoardReducer = (state = initialState, action) => {
     case "DELETE_BOARD":
       return;
     case "DELETE_TASK":
-      return;
-    case "EDIT_TASK":
+    // const { selectedTaskIndex, selectedBoardName, selectedColumn } = payload;
+    // const appState = JSON.parse(localStorage.getItem("appState"));
 
+    // const newState = appState?.selectedBoard?.columns?.map((col, i) => {
+    //   if (col.name === selectedColumn.name) {
+    //     col.tasks.splice(selectedTaskIndex, 1);
+    //     return col;
+    //   }
+    //   return col;
+    // });
+    // const { data: { boards: boardsData } = {} } = appState;
+    // const result = boardsData?.map((board, i) => {
+    //   if (board.name === selectedBoardName) {
+    //     board.columns = newState;
+    //   }
+    //   return board;
+    // });
+    // appState.data = result;
+    // appState.delete = true;
+
+    // return { ...appState };
     case "EDIT_BOARD":
-    case "CHANGE_TASK_STATUS":
-      const {
-        selectedTaskIndex,
-        selectedBoardName,
-        selectedColumn,
-        newColumn,
-        selectedTaskObj,
-      } = payload;
-      const appState = localStorage.getItem("appState");
-      const newState = appState.boards.map((board, index) => {
-        if (board.name === selectedBoardName) {
-          return board.columns.map((col, i) => {
-            if (col.name === selectedColumn) {
-              return col.tasks.filter((task, j) => {
-                if (j === selectedTaskIndex) {
-                  return false;
-                }
-                return true;
-              });
-            }
-            if (col.name === newColumn) {
-              col.tasks.push(selectedTaskObj);
-              return col;
-            }
-          });
-        }
-      });
+    case "EDIT_TASK":
+    // const {
+    //   selectedTaskIndex,
+    //   selectedBoardName,
+    //   selectedColumn,
+    //   newColumn,
+    //   selectedTaskObj,
+    // } = payload;
+    // const appState = JSON.parse(localStorage.getItem("appState"));
+    // const newState = appState?.selectedBoard?.columns?.map((col, i) => {
+    //   if (col.name === selectedColumn.name) {
+    //     col.tasks.splice(selectedTaskIndex, 1);
+    //     return col;
+    //   }
+    //   if (col.name === newColumn) {
+    //     col.tasks.push(selectedTaskObj);
+    //     return col;
+    //   }
+    //   return col;
+    // });
+    // const {
+    //   data: { boards: boardsData },
+    // } = appState;
+    // const result = boardsData?.map((board, i) => {
+    //   if (board.name === selectedBoardName) {
+    //     board.columns = newState;
+    //   }
+    //   return board;
+    // });
+    // appState.data = result;
+    // localStorage.setItem("appState",JSON.stringify(appState))
+    // return { ...appState };
   }
 };

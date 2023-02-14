@@ -33,9 +33,13 @@ const calculateCompletedSubtask = (subtasks) => {
 
 const BoardContent = ({ board }) => {
   const { theme } = useContext(ThemeContext);
-  const { state } = useContext(BoardContext);
+  const { state, editTask, deleteTask } = useContext(BoardContext);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState({});
+  const [editData, setEditData] = useState({});
+  const [status, setStatus] = useState("");
+
   const { selectedBoard } = state;
   if (selectedBoard?.columns.length === 0) {
     return (
@@ -45,9 +49,37 @@ const BoardContent = ({ board }) => {
       </div>
     );
   }
+  const calculateStatusArray = () => {
+    const statusList = [];
+    selectedBoard?.columns.forEach((column, i) => {
+      statusList.push(column.name);
+    });
+    return statusList;
+  };
   const onTaskClick = (task) => {
     setShowModal(true);
     setSelectedTask(task);
+  };
+  const onTaskEdit = ({
+    selectedTaskIndex,
+    selectedBoardName,
+    selectedColumn,
+    selectedTaskObj,
+  }) => {
+    setShowEditModal(true);
+    // editTask({
+    //   selectedTaskIndex,
+    //   selectedBoardName,
+    //   selectedColumn,
+    //   newColumn,
+    //   selectedTaskObj,
+    // });
+    setEditData({
+      selectedTaskIndex,
+      selectedBoardName,
+      selectedColumn,
+      selectedTaskObj,
+    });
   };
   return (
     <div>
@@ -63,6 +95,30 @@ const BoardContent = ({ board }) => {
                     <div>{task.title}</div>
                     <div style={{ fontSize: "11px", marginTop: "10px" }}>
                       {completedTask} of {task.subtasks.length} subtasks
+                    </div>
+                    <div
+                      onClick={() =>
+                        onTaskEdit({
+                          selectedTaskIndex: index,
+                          selectedBoardName: selectedBoard.name,
+                          selectedColumn: column,
+                          selectedTaskObj: task,
+                        })
+                      }
+                    >
+                      edit
+                    </div>
+                    <div
+                      onClick={() => {
+                        deleteTask({
+                          selectedTaskIndex: index,
+                          selectedBoardName: selectedBoard.name,
+                          selectedColumn: column,
+                        });
+                        localStorage.setItem("appState", JSON.stringify(state));
+                      }}
+                    >
+                      delete
                     </div>
                   </StyledTaskTitle>
                 );
@@ -126,6 +182,34 @@ const BoardContent = ({ board }) => {
             >
               X
             </div>
+          </div>
+        </Modal>
+      ) : null}
+      {showEditModal ? (
+        <Modal>
+          <div>
+            <div>Status</div>
+            <div>
+              <select
+                style={{ padding: "5px", width: "100%" }}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option value={selectedTask.status}>
+                  {selectedTask.status}
+                </option>
+                {calculateStatusArray()?.map((ele, i) => (
+                  <option value={ele}>{ele}</option>
+                ))}
+              </select>
+            </div>
+            <button
+              onClick={() => {
+                editTask({ ...editData, newColumn: status });
+                setShowEditModal(false);
+              }}
+            >
+              Save
+            </button>
           </div>
         </Modal>
       ) : null}
