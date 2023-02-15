@@ -10,8 +10,40 @@ export const BoardReducer = (state = initialState, action) => {
   const { payload, type } = action;
   switch (type) {
     case "CREATE_NEW_BOARD":
+      const { data } = state;
+      const { newBoard } = payload;
+      data.boards = data.boards.concat([newBoard]);
+      return {
+        ...state,
+      };
     case "CREATE_NEW_TASK":
+      const { selectedBoard: currentBoard } = state;
+      const { newTask } = payload;
+      let taskAlreadyAdded = false;
+      currentBoard?.columns[0]?.tasks.forEach((task, i) => {
+        if (task.title === newTask.title) {
+          taskAlreadyAdded = true;
+        }
+      });
+      if (!taskAlreadyAdded) {
+        currentBoard.columns[0].tasks = currentBoard?.columns[0]?.tasks.concat([
+          newTask,
+        ]);
+      }
+
+      // localStorage.setItem("appState", JSON.stringify(newState));
+      return {
+        ...state,
+        selectedBoard: currentBoard,
+      };
+
     case "ADD_NEW_COLUMN":
+      const { selectedBoard: presentBoard } = state;
+      const { column } = state;
+      presentBoard.columns = presentBoard.columns.concat(column);
+      return {
+        ...state,
+      };
     case "FETCH_BOARD_DATA":
       const {
         selectedBoardIndex,
@@ -31,6 +63,18 @@ export const BoardReducer = (state = initialState, action) => {
       };
 
     case "DELETE_BOARD":
+      const { data: boardData } = state;
+      const { selectedBoardIndex: currentBoardIndex } = payload;
+      const newBoardsList = boardData.boards.filter((ele, i) => {
+        if (i === currentBoardIndex) {
+          return false;
+        }
+        return true;
+      });
+      boardData.boards = newBoardsList;
+      return {
+        ...state,
+      };
       return;
     case "DELETE_TASK":
     // const { selectedTaskIndex, selectedBoardName, selectedColumn } = payload;
@@ -51,10 +95,22 @@ export const BoardReducer = (state = initialState, action) => {
     //   return board;
     // });
     // appState.data = result;
-    // appState.delete = true;
 
     // return { ...appState };
     case "EDIT_BOARD":
+      const { data: currentData } = state;
+      const { editedBoard } = payload;
+
+      currentData.boards = currentData?.boards.map((board, i) => {
+        if (board.title === editedBoard.title) {
+          return editedBoard;
+        }
+        return board;
+      });
+
+      return {
+        ...state,
+      };
     case "EDIT_TASK":
     // const {
     //   selectedTaskIndex,
@@ -70,7 +126,7 @@ export const BoardReducer = (state = initialState, action) => {
     //     return col;
     //   }
     //   if (col.name === newColumn) {
-    //     col.tasks.push(selectedTaskObj);
+    //     col.tasks=col.tasks.concat([selectedTaskObj]);
     //     return col;
     //   }
     //   return col;
