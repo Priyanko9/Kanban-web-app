@@ -7,10 +7,12 @@ import EditTask from "./EditTask";
 
 const StyledTaskTitle = styled.div`
   padding: 20px;
-  width: 300px;
+  width: 70%;
   background: white;
   margin-bottom: 10px;
   border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const StyledTaskTile = styled.div`
@@ -84,27 +86,31 @@ const BoardContent = ({ board }) => {
       <StyledTaskTile theme={theme}>
         {selectedBoard?.columns?.map((column, i) => {
           return (
-            <div style={{ marginLeft: "10px" }}>
+            <div style={{ marginLeft: "10px", width: "33%" }}>
               <div>{column.name}</div>
               {column?.tasks?.map((task, index) => {
                 const completedTask = calculateCompletedSubtask(task.subtasks);
                 return (
                   <StyledTaskTitle onClick={() => onTaskClick(task)}>
-                    <div>{task.title}</div>
-                    <div style={{ fontSize: "11px", marginTop: "10px" }}>
-                      {completedTask} of {task.subtasks.length} subtasks
-                    </div>
-                    <div
-                      onClick={() =>
-                        onTaskEdit({
-                          selectedTaskIndex: index,
-                          selectedBoardName: selectedBoard.name,
-                          selectedColumn: column,
-                          selectedTaskObj: task,
-                        })
-                      }
-                    >
-                      edit
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <div>{task.title}</div>
+                      <div style={{ fontSize: "11px", marginTop: "10px" }}>
+                        {completedTask} of {task.subtasks.length} subtasks
+                      </div>
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onTaskEdit({
+                            selectedTaskIndex: index,
+                            selectedBoardName: selectedBoard.name,
+                            selectedColumn: column,
+                            selectedTaskObj: task,
+                          });
+                        }}
+                        style={{ marginTop: "10px" }}
+                      >
+                        Edit
+                      </div>
                     </div>
                     <div
                       onClick={() => {
@@ -116,7 +122,7 @@ const BoardContent = ({ board }) => {
                         localStorage.setItem("appState", JSON.stringify(state));
                       }}
                     >
-                      delete
+                      X
                     </div>
                   </StyledTaskTitle>
                 );
