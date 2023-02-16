@@ -77,26 +77,32 @@ export const BoardReducer = (state = initialState, action) => {
       };
       return;
     case "DELETE_TASK":
-    // const { selectedTaskIndex, selectedBoardName, selectedColumn } = payload;
-    // const appState = JSON.parse(localStorage.getItem("appState"));
+      const {
+        selectedTaskIndex: taskIndex,
+        selectedBoardName: boardName,
+        selectedColumn: currentColumn,
+      } = payload;
+      const appLocalState = JSON.parse(localStorage.getItem("appState"));
 
-    // const newState = appState?.selectedBoard?.columns?.map((col, i) => {
-    //   if (col.name === selectedColumn.name) {
-    //     col.tasks.splice(selectedTaskIndex, 1);
-    //     return col;
-    //   }
-    //   return col;
-    // });
-    // const { data: { boards: boardsData } = {} } = appState;
-    // const result = boardsData?.map((board, i) => {
-    //   if (board.name === selectedBoardName) {
-    //     board.columns = newState;
-    //   }
-    //   return board;
-    // });
-    // appState.data = result;
+      const newLocalState = appLocalState?.selectedBoard?.columns?.map(
+        (col, i) => {
+          if (col.name === currentColumn.name) {
+            col.tasks.splice(taskIndex, 1);
+            return col;
+          }
+          return col;
+        }
+      );
+      const { data: { boards: boardsDataList } = {} } = appLocalState;
+      const resultList = boardsDataList?.map((board, i) => {
+        if (board.name === boardName) {
+          board.columns = newLocalState;
+        }
+        return board;
+      });
+      appLocalState.data = resultList;
 
-    // return { ...appState };
+      return { ...appLocalState };
     case "EDIT_BOARD":
       const { data: currentData } = state;
       const { editedBoard } = payload;
@@ -112,36 +118,35 @@ export const BoardReducer = (state = initialState, action) => {
         ...state,
       };
     case "EDIT_TASK":
-    // const {
-    //   selectedTaskIndex,
-    //   selectedBoardName,
-    //   selectedColumn,
-    //   newColumn,
-    //   selectedTaskObj,
-    // } = payload;
-    // const appState = JSON.parse(localStorage.getItem("appState"));
-    // const newState = appState?.selectedBoard?.columns?.map((col, i) => {
-    //   if (col.name === selectedColumn.name) {
-    //     col.tasks.splice(selectedTaskIndex, 1);
-    //     return col;
-    //   }
-    //   if (col.name === newColumn) {
-    //     col.tasks=col.tasks.concat([selectedTaskObj]);
-    //     return col;
-    //   }
-    //   return col;
-    // });
-    // const {
-    //   data: { boards: boardsData },
-    // } = appState;
-    // const result = boardsData?.map((board, i) => {
-    //   if (board.name === selectedBoardName) {
-    //     board.columns = newState;
-    //   }
-    //   return board;
-    // });
-    // appState.data = result;
-    // localStorage.setItem("appState",JSON.stringify(appState))
-    // return { ...appState };
+      const {
+        selectedTaskIndex,
+        selectedBoardName,
+        selectedColumn,
+        newColumn,
+        selectedTaskObj,
+      } = payload;
+      const appState = JSON.parse(localStorage.getItem("appState"));
+      const newState = appState?.selectedBoard?.columns?.map((col, i) => {
+        if (col.name === selectedColumn.name) {
+          col.tasks.splice(selectedTaskIndex, 1);
+          return col;
+        }
+        if (col.name === newColumn) {
+          col.tasks = col.tasks.concat([selectedTaskObj]);
+          return col;
+        }
+        return col;
+      });
+      const {
+        data: { boards: boardsData },
+      } = appState;
+      const result = boardsData?.map((board, i) => {
+        if (board.name === selectedBoardName) {
+          board.columns = newState;
+        }
+        return board;
+      });
+      appState.data = result;
+      return { ...appState };
   }
 };

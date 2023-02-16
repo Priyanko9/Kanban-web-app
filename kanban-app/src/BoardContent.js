@@ -1,10 +1,9 @@
 import styled from "styled-components";
-import { useContext, useState } from "react";
-import { backendData } from "./data";
+import { useContext, useState, useCallback } from "react";
 import { ThemeContext } from "./App";
 import { BoardContext } from "./BoardContext";
-import Modal from "./Modal";
-import Checkbox from "./Checkbox/Checkbox";
+import ViewTask from "./ViewTask";
+import EditTask from "./EditTask";
 
 const StyledTaskTitle = styled.div`
   padding: 20px;
@@ -33,22 +32,15 @@ const calculateCompletedSubtask = (subtasks) => {
 
 const BoardContent = ({ board }) => {
   const { theme } = useContext(ThemeContext);
-  const { state, editTask, deleteTask } = useContext(BoardContext);
+  const contextValue = useContext(BoardContext);
+  const { state, editTask, deleteTask } = contextValue;
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState({});
   const [editData, setEditData] = useState({});
-  const [status, setStatus] = useState("");
 
-  const { selectedBoard } = state;
-  if (selectedBoard?.columns.length === 0) {
-    return (
-      <div>
-        <div>The Board is empty.Create a new column to get started</div>
-        <div>+ Add New Column</div>
-      </div>
-    );
-  }
+  const { selectedBoard } = state || {};
+
   const calculateStatusArray = () => {
     const statusList = [];
     selectedBoard?.columns.forEach((column, i) => {
@@ -67,13 +59,7 @@ const BoardContent = ({ board }) => {
     selectedTaskObj,
   }) => {
     setShowEditModal(true);
-    // editTask({
-    //   selectedTaskIndex,
-    //   selectedBoardName,
-    //   selectedColumn,
-    //   newColumn,
-    //   selectedTaskObj,
-    // });
+
     setEditData({
       selectedTaskIndex,
       selectedBoardName,
@@ -81,14 +67,26 @@ const BoardContent = ({ board }) => {
       selectedTaskObj,
     });
   };
+  const calculateCompletedSubtaskCallback = useCallback((subtasks) => {
+    calculateCompletedSubtask(subtasks);
+  }, []);
+
+  if (selectedBoard?.columns.length === 0) {
+    return (
+      <div>
+        <div>The Board is empty.Create a new column to get started</div>
+        <div>+ Add New Column</div>
+      </div>
+    );
+  }
   return (
     <div>
       <StyledTaskTile theme={theme}>
-        {selectedBoard.columns.map((column, i) => {
+        {selectedBoard?.columns?.map((column, i) => {
           return (
             <div style={{ marginLeft: "10px" }}>
               <div>{column.name}</div>
-              {column.tasks.map((task, index) => {
+              {column?.tasks?.map((task, index) => {
                 const completedTask = calculateCompletedSubtask(task.subtasks);
                 return (
                   <StyledTaskTitle onClick={() => onTaskClick(task)}>
@@ -127,92 +125,20 @@ const BoardContent = ({ board }) => {
           );
         })}
       </StyledTaskTile>
-      {showModal ? (
-        <Modal>
-          <div
-            style={{
-              background: "white",
-              padding: "20px",
-              position: "relative",
-            }}
-          >
-            <div style={{ marginBottom: "10px" }}>{selectedTask.title}</div>
-            <div style={{ marginBottom: "10px" }}>
-              {selectedTask.description}
-            </div>
-            <div>
-              <div>
-                Subtasks {calculateCompletedSubtask(selectedTask.subtasks)} of{" "}
-                {selectedTask.subtasks.length}
-              </div>
-              {selectedTask.subtasks.map((ele, index) => {
-                return (
-                  <div
-                    style={{
-                      background: "#E4EBFA",
-                      marginBottom: "5px",
-                      padding: "5px",
-                    }}
-                  >
-                    <Checkbox
-                      textLabel={ele.title}
-                      strikeThrough={true}
-                      checkedState={ele.isCompleted}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-            <div>
-              <div>Status</div>
-              <div>
-                <select style={{ padding: "5px", width: "100%" }}>
-                  <option>{selectedTask.status}</option>
-                </select>
-              </div>
-            </div>
-            <div
-              onClick={() => setShowModal(false)}
-              style={{
-                position: "absolute",
-                /* align-self: flex-end; */
-                top: "10px",
-                right: "10px",
-              }}
-            >
-              X
-            </div>
-          </div>
-        </Modal>
-      ) : null}
-      {showEditModal ? (
-        <Modal>
-          <div>
-            <div>Status</div>
-            <div>
-              <select
-                style={{ padding: "5px", width: "100%" }}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option value={selectedTask.status}>
-                  {selectedTask.status}
-                </option>
-                {calculateStatusArray()?.map((ele, i) => (
-                  <option value={ele}>{ele}</option>
-                ))}
-              </select>
-            </div>
-            <button
-              onClick={() => {
-                editTask({ ...editData, newColumn: status });
-                setShowEditModal(false);
-              }}
-            >
-              Save
-            </button>
-          </div>
-        </Modal>
-      ) : null}
+      <ViewTask
+        calculateCompletedSubtaskCallback={calculateCompletedSubtaskCallback}
+        selectedTask={selectedTask}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
+      <EditTask
+        showEditModal={showEditModal}
+        selectedTask={selectedTask}
+        editData={editData}
+        calculateStatusArray={calculateStatusArray}
+        editTask={editTask}
+        setShowEditModal={setShowEditModal}
+      />
     </div>
   );
 };
