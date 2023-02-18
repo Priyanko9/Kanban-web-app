@@ -5,6 +5,7 @@ import { ReactComponent as BoardSvg } from "./assets/icon-board.svg";
 import { backendData } from "./data";
 import { ThemeContext } from "./App";
 import { BoardContext } from "./BoardContext";
+import AddNewBoard from "./AddNewBoard";
 
 const StyledBoardContainer = styled.div`
   width: 276px;
@@ -26,8 +27,11 @@ const StyledBoardName = styled.span`
 const BoardsSidebar = () => {
   const [selectedBoard, setSelectedBoard] = useState(0);
   const { theme } = useContext(ThemeContext);
-  const { fetchBoard } = useContext(BoardContext);
-  const { boards } = backendData || [];
+  const { fetchBoard, state } = useContext(BoardContext);
+  const {
+    data: { boards },
+  } = state || [];
+  const [addBoardModal, setAddBoardModal] = useState(false);
 
   const selectBoard = (index) => {
     fetchBoard(index);
@@ -56,8 +60,14 @@ const BoardsSidebar = () => {
         <span>
           <BoardSvg />
         </span>
-        <StyledBoardName>+ Create New Board</StyledBoardName>
+        <StyledBoardName onClick={() => setAddBoardModal(true)}>
+          + Create New Board
+        </StyledBoardName>
       </StyledBoardContainer>
+      <AddNewBoard
+        addBoardModal={addBoardModal}
+        setAddBoardModal={setAddBoardModal}
+      />
     </>
   );
 

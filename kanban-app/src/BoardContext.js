@@ -59,9 +59,25 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
+  const createNewBoard = (newBoard) => {
+    dispatch({
+      type: "CREATE_NEW_BOARD",
+      payload: {
+        newBoard,
+      },
+    });
+  };
+
   return (
     <BoardContext.Provider
-      value={{ fetchBoard, state, editTask, deleteTask, addNewTask }}
+      value={{
+        fetchBoard,
+        state,
+        editTask,
+        deleteTask,
+        addNewTask,
+        createNewBoard,
+      }}
     >
       {children}
     </BoardContext.Provider>

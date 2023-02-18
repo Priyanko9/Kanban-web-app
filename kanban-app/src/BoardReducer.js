@@ -12,9 +12,12 @@ export const BoardReducer = (state = initialState, action) => {
     case "CREATE_NEW_BOARD":
       const { data } = state;
       const { newBoard } = payload;
-      data.boards = data.boards.concat([newBoard]);
+      const newboards = data.boards.concat([newBoard]);
       return {
         ...state,
+        data: {
+          boards: newboards,
+        },
       };
     case "CREATE_NEW_TASK":
       const { selectedBoard: currentBoard } = state;
@@ -148,5 +151,7 @@ export const BoardReducer = (state = initialState, action) => {
       });
       appState.data = result;
       return { ...appState };
+    default:
+      return state;
   }
 };
