@@ -28,14 +28,17 @@ const StyledButton = styled.button`
 
 const AddNewBoard = ({ addBoardModal, setAddBoardModal }) => {
   const [columns, setColumns] = useState([]);
-  const [columnName, setColumnName] = useState("");
   const [boardName, setBoardName] = useState("");
   const contextValue = useContext(BoardContext);
   const { createNewBoard } = contextValue;
 
   const addNewColumn = () => {
-    columns.push({ name: columnName, tasks: [] });
+    columns.push({ name: "", tasks: [] });
     setColumns([...columns]);
+  };
+
+  const addColumnName = (name) => {
+    columns[columns.length - 1].name = name;
   };
 
   const removeColumn = (index) => {
@@ -49,6 +52,7 @@ const AddNewBoard = ({ addBoardModal, setAddBoardModal }) => {
       columns,
     });
     setAddBoardModal(false);
+    setColumns([]);
   };
 
   return addBoardModal ? (
@@ -72,7 +76,7 @@ const AddNewBoard = ({ addBoardModal, setAddBoardModal }) => {
                 <span>
                   <StyledInput
                     type="text"
-                    onChange={(e) => setColumnName(e.target.value)}
+                    onChange={(e) => addColumnName(e.target.value)}
                   />
                 </span>
                 <span onClick={() => removeColumn(i)}>X</span>

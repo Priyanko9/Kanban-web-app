@@ -100,6 +100,7 @@ const BoardContent = ({ board }) => {
                       <div
                         onClick={(e) => {
                           e.stopPropagation();
+                          setSelectedTask(task);
                           onTaskEdit({
                             selectedTaskIndex: index,
                             selectedBoardName: selectedBoard.name,

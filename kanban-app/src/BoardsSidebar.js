@@ -40,7 +40,7 @@ const BoardsSidebar = () => {
   return (
     <>
       <div>Kanban</div>
-      <div>All Boards {boards.length}</div>
+      <div>All Boards {boards?.length}</div>
       {boards.map((board, index) => {
         return (
           <StyledBoardContainer

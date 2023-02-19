@@ -149,7 +149,7 @@ export const BoardReducer = (state = initialState, action) => {
         }
         return board;
       });
-      appState.data = result;
+      appState.data.boards = result;
       return { ...appState };
     default:
       return state;
