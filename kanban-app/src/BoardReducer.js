@@ -18,34 +18,63 @@ export const BoardReducer = (state = initialState, action) => {
         data: {
           boards: newboards,
         },
+        selectedBoardIndex: newboards.length - 1,
+        selectedBoard: newboards[newboards.length - 1],
       };
     case "CREATE_NEW_TASK":
-      const { selectedBoard: currentBoard } = state;
-      const { newTask } = payload;
-      let taskAlreadyAdded = false;
-      currentBoard?.columns[0]?.tasks.forEach((task, i) => {
-        if (task.title === newTask.title) {
-          taskAlreadyAdded = true;
-        }
-      });
-      if (!taskAlreadyAdded) {
-        currentBoard.columns[0].tasks = currentBoard?.columns[0]?.tasks.concat([
-          newTask,
-        ]);
-      }
-
-      // localStorage.setItem("appState", JSON.stringify(newState));
-      return {
-        ...state,
+      const {
         selectedBoard: currentBoard,
+        data: { boards: currentBoards },
+      } = state;
+      const { newTask } = payload;
+      const newTasksList = currentBoard?.columns[0]?.tasks.concat([newTask]);
+
+      const newStateObj = {
+        ...state,
+        selectedBoard: {
+          name: currentBoard.name,
+          columns: [
+            { name: currentBoard.columns[0].name, tasks: newTasksList },
+            ...currentBoard.columns.slice(1, currentBoard.columns.length),
+          ],
+        },
+        data: {
+          boards: [
+            {
+              name: currentBoard.name,
+              columns: [
+                { name: currentBoard.columns[0].name, tasks: newTasksList },
+                ...currentBoard.columns.slice(1, currentBoard.columns.length),
+              ],
+            },
+            ...currentBoards.slice(1, currentBoards.length),
+          ],
+        },
       };
+      return newStateObj;
 
     case "ADD_NEW_COLUMN":
-      const { selectedBoard: presentBoard } = state;
-      const { column } = state;
-      presentBoard.columns = presentBoard.columns.concat(column);
+      const {
+        selectedBoard: presentBoard,
+        data: { boards: presentBoards },
+      } = state;
+      const { column } = payload;
+      const newColumns = presentBoard.columns.concat(column);
       return {
         ...state,
+        selectedBoard: {
+          name: presentBoard.name,
+          columns: newColumns,
+        },
+        data: {
+          boards: [
+            {
+              name: presentBoard.name,
+              columns: newColumns,
+            },
+            ...presentBoards.slice(1, presentBoards.length),
+          ],
+        },
       };
     case "FETCH_BOARD_DATA":
       const {
@@ -66,17 +95,21 @@ export const BoardReducer = (state = initialState, action) => {
       };
 
     case "DELETE_BOARD":
-      const { data: boardData } = state;
-      const { selectedBoardIndex: currentBoardIndex } = payload;
+      const { data: boardData, selectedBoardIndex: currentBoardIndex } = state;
+
       const newBoardsList = boardData.boards.filter((ele, i) => {
         if (i === currentBoardIndex) {
           return false;
         }
         return true;
       });
-      boardData.boards = newBoardsList;
+
       return {
         ...state,
+        data: {
+          boards: newBoardsList,
+        },
+        selectedBoard: newBoardsList[0],
       };
       return;
     case "DELETE_TASK":
@@ -103,14 +136,14 @@ export const BoardReducer = (state = initialState, action) => {
         }
         return board;
       });
-      appLocalState.data = resultList;
+      appLocalState.data.boards = resultList;
 
       return { ...appLocalState };
     case "EDIT_BOARD":
       const { data: currentData } = state;
       const { editedBoard } = payload;
 
-      currentData.boards = currentData?.boards.map((board, i) => {
+      const newBoardsArray = currentData?.boards.map((board, i) => {
         if (board.title === editedBoard.title) {
           return editedBoard;
         }
@@ -119,6 +152,9 @@ export const BoardReducer = (state = initialState, action) => {
 
       return {
         ...state,
+        data: {
+          boards: newBoardsArray,
+        },
       };
     case "EDIT_TASK":
       const {

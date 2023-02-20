@@ -41,21 +41,22 @@ const BoardsSidebar = () => {
     <>
       <div>Kanban</div>
       <div>All Boards {boards?.length}</div>
-      {boards.map((board, index) => {
-        return (
-          <StyledBoardContainer
-            key={index}
-            selected={selectedBoard === index}
-            theme={theme}
-            onClick={() => selectBoard(index)}
-          >
-            <span>
-              <BoardSvg />
-            </span>
-            <StyledBoardName>{board.name}</StyledBoardName>
-          </StyledBoardContainer>
-        );
-      })}
+      {boards &&
+        boards.map((board, index) => {
+          return (
+            <StyledBoardContainer
+              key={index}
+              selected={selectedBoard === index}
+              theme={theme}
+              onClick={() => selectBoard(index)}
+            >
+              <span>
+                <BoardSvg />
+              </span>
+              <StyledBoardName>{board.name}</StyledBoardName>
+            </StyledBoardContainer>
+          );
+        })}
       <StyledBoardContainer theme={theme}>
         <span>
           <BoardSvg />

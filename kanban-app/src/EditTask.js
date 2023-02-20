@@ -34,6 +34,7 @@ const EditTask = ({
   useEffect(() => {
     setCurrentTask(currentTask);
   }, [currentTask]);
+
   const removeColumn = (index) => {
     selectedTask.subtasks.splice(index, 1);
     setCurrentTask({ ...selectedTask });

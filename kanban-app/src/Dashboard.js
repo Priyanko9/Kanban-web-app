@@ -6,8 +6,8 @@ import useResponseData from "./useResponseData";
 import BoardsSidebar from "./BoardsSidebar";
 import BoardColumns from "./BoardColumns";
 import BoardContent from "./BoardContent";
-import Modal from "./Modal";
-import { BoardContext } from "./BoardContext";
+import AddNewTask from "./AddNewTask";
+import DeleteBoardModal from "./DeleteBoardModal";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -24,7 +24,8 @@ const StyledHeader = styled.div`
 const Dashboard = () => {
   const response = useResponseData();
   const [showAddModal, setShowAddModal] = useState(false);
-  const { addNewTask } = useContext(BoardContext);
+  const [showDeleteBoardModal, setShowDeleteBoardModal] = useState(false);
+
   console.log("response dashboard:", response);
   return (
     <StyledContainer>
@@ -36,53 +37,18 @@ const Dashboard = () => {
         <StyledHeader>
           <div>Dashboard Header</div>
           <div onClick={() => setShowAddModal(true)}>+ Add New Task</div>
+          <div onClick={() => setShowDeleteBoardModal(true)}>Delete Board</div>
         </StyledHeader>
         <BoardContent />
       </div>
-      {showAddModal ? (
-        <Modal>
-          <div style={{ width: "200px", background: "white", padding: "20px" }}>
-            <div>
-              <label>Title</label>
-              <br />
-              <input type="text" />
-            </div>
-            <div>
-              <label>Description</label>
-              <textarea />
-            </div>
-            <div>
-              <label>Subtasks</label>
-              <div>
-                <input type="text" />
-                <span>X</span>
-              </div>
-              <button>Create New Subtask</button>
-            </div>
-            <div>
-              <div>Status</div>
-              <div>
-                <select style={{ padding: "5px", width: "100%" }}>
-                  <option>Todo</option>
-                </select>
-              </div>
-            </div>
-            <button
-              onClick={() =>
-                addNewTask({
-                  title: "abc",
-                  description: "dhsjhsdkjfkdfdkj",
-                  status: "Todo",
-                  subtasks: [{ title: "sub-one", isCompleted: false }],
-                })
-              }
-            >
-              Create Task
-            </button>
-            <div onClick={() => setShowAddModal(false)}>close modal</div>
-          </div>
-        </Modal>
-      ) : null}
+      <AddNewTask
+        setShowAddModal={setShowAddModal}
+        showAddModal={showAddModal}
+      />
+      <DeleteBoardModal
+        showDeleteBoardModal={showDeleteBoardModal}
+        setShowDeleteBoardModal={setShowDeleteBoardModal}
+      />
     </StyledContainer>
   );
 };

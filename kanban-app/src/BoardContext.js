@@ -68,6 +68,12 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
+  const deleteBoard = () => {
+    dispatch({
+      type: "DELETE_BOARD",
+    });
+  };
+
   return (
     <BoardContext.Provider
       value={{
@@ -77,6 +83,7 @@ export const BoardProvider = ({ children }) => {
         deleteTask,
         addNewTask,
         createNewBoard,
+        deleteBoard,
       }}
     >
       {children}

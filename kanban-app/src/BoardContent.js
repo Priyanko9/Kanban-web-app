@@ -114,7 +114,8 @@ const BoardContent = ({ board }) => {
                       </div>
                     </div>
                     <div
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         deleteTask({
                           selectedTaskIndex: index,
                           selectedBoardName: selectedBoard.name,
