@@ -4,10 +4,10 @@ import { ThemeContext } from "./App";
 import { ReactComponent as BoardSvg } from "./assets/icon-board.svg";
 import useResponseData from "./useResponseData";
 import BoardsSidebar from "./BoardsSidebar";
-import BoardColumns from "./BoardColumns";
 import BoardContent from "./BoardContent";
 import AddNewTask from "./AddNewTask";
 import DeleteBoardModal from "./DeleteBoardModal";
+import EditBoardModal from "./EditBoard";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -22,11 +22,10 @@ const StyledHeader = styled.div`
 `;
 
 const Dashboard = () => {
-  const response = useResponseData();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteBoardModal, setShowDeleteBoardModal] = useState(false);
 
-  console.log("response dashboard:", response);
   return (
     <StyledContainer>
       <div>
@@ -38,6 +37,7 @@ const Dashboard = () => {
           <div>Dashboard Header</div>
           <div onClick={() => setShowAddModal(true)}>+ Add New Task</div>
           <div onClick={() => setShowDeleteBoardModal(true)}>Delete Board</div>
+          <div onClick={() => setShowEditModal(true)}>Edit Board</div>
         </StyledHeader>
         <BoardContent />
       </div>
@@ -48,6 +48,10 @@ const Dashboard = () => {
       <DeleteBoardModal
         showDeleteBoardModal={showDeleteBoardModal}
         setShowDeleteBoardModal={setShowDeleteBoardModal}
+      />
+      <EditBoardModal
+        editBoardModal={showEditModal}
+        setEditBoardModal={setShowEditModal}
       />
     </StyledContainer>
   );

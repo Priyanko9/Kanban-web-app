@@ -53,29 +53,6 @@ export const BoardReducer = (state = initialState, action) => {
       };
       return newStateObj;
 
-    case "ADD_NEW_COLUMN":
-      const {
-        selectedBoard: presentBoard,
-        data: { boards: presentBoards },
-      } = state;
-      const { column } = payload;
-      const newColumns = presentBoard.columns.concat(column);
-      return {
-        ...state,
-        selectedBoard: {
-          name: presentBoard.name,
-          columns: newColumns,
-        },
-        data: {
-          boards: [
-            {
-              name: presentBoard.name,
-              columns: newColumns,
-            },
-            ...presentBoards.slice(1, presentBoards.length),
-          ],
-        },
-      };
     case "FETCH_BOARD_DATA":
       const {
         selectedBoardIndex,
@@ -86,12 +63,13 @@ export const BoardReducer = (state = initialState, action) => {
       if (!savedData) {
         localStorage.setItem("appState", JSON.stringify(state));
       }
-
+      const selectedBoardString = `${selectedBoard}`;
       return {
         ...state,
-        selectedBoard: !selectedBoard
+        selectedBoard: !selectedBoardString
           ? boards[selectedBoardIndex]
           : boards[selectedBoard],
+        selectedBoardIndex: selectedBoard,
       };
 
     case "DELETE_BOARD":
@@ -140,11 +118,12 @@ export const BoardReducer = (state = initialState, action) => {
 
       return { ...appLocalState };
     case "EDIT_BOARD":
-      const { data: currentData } = state;
+      const { data: currentData, selectedBoardIndex: presentBoardIndex } =
+        state;
       const { editedBoard } = payload;
 
       const newBoardsArray = currentData?.boards.map((board, i) => {
-        if (board.title === editedBoard.title) {
+        if (i === presentBoardIndex) {
           return editedBoard;
         }
         return board;

@@ -74,6 +74,15 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
+  const editBoard = (editedBoard) => {
+    dispatch({
+      type: "EDIT_BOARD",
+      payload: {
+        editedBoard,
+      },
+    });
+  };
+
   return (
     <BoardContext.Provider
       value={{
@@ -84,6 +93,7 @@ export const BoardProvider = ({ children }) => {
         addNewTask,
         createNewBoard,
         deleteBoard,
+        editBoard,
       }}
     >
       {children}
