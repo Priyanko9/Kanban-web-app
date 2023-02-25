@@ -87,13 +87,17 @@ const BoardContent = ({ board }) => {
         {selectedBoard?.columns?.map((column, i) => {
           return (
             <div style={{ marginLeft: "10px", width: "33%" }}>
-              <div>{column.name}</div>
+              <div style={{ marginBottom: "10px" }}>
+                {column.name} ({column?.tasks.length})
+              </div>
               {column?.tasks?.map((task, index) => {
                 const completedTask = calculateCompletedSubtask(task.subtasks);
                 return (
                   <StyledTaskTitle onClick={() => onTaskClick(task)}>
                     <div style={{ display: "flex", flexDirection: "column" }}>
-                      <div>{task.title}</div>
+                      <div>
+                        <b>{task.title}</b>
+                      </div>
                       <div style={{ fontSize: "11px", marginTop: "10px" }}>
                         {completedTask} of {task.subtasks.length} subtasks
                       </div>
