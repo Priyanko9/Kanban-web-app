@@ -26,6 +26,10 @@ const StyledButton = styled.button`
   margin-top: 10px;
 `;
 
+const StyledInputContainer = styled.div`
+  margin-top: 10px;
+`;
+
 const AddNewBoard = ({ addBoardModal, setAddBoardModal }) => {
   const [columns, setColumns] = useState([]);
   const [boardName, setBoardName] = useState("");
@@ -61,12 +65,12 @@ const AddNewBoard = ({ addBoardModal, setAddBoardModal }) => {
         <h3>Add New Board</h3>
         <div>
           <label>Name</label>
-          <div style={{ marginTop: "10px" }}>
+          <StyledInputContainer>
             <StyledInput
               type="text"
               onChange={(e) => setBoardName(e.target.value)}
             />
-          </div>
+          </StyledInputContainer>
         </div>
         <div>
           <label>Columns</label>

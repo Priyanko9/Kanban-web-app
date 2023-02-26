@@ -2,8 +2,7 @@ import styled from "styled-components";
 import { useState, useContext } from "react";
 import { ThemeContext } from "./App";
 import { ReactComponent as EllipsisSvg } from "./assets/icon-vertical-ellipsis.svg";
-
-import useResponseData from "./useResponseData";
+import { BoardContext } from "./BoardContext";
 import BoardsSidebar from "./BoardsSidebar";
 import BoardContent from "./BoardContent";
 import AddNewTask from "./AddNewTask";
@@ -24,55 +23,75 @@ const StyledHeader = styled.div`
   padding-top: 10px;
 `;
 
+const StyledSidebar = styled.div`
+  border-right: 0.1px solid grey;
+  padding-right: 20px;
+`;
+
+const StyledMainContainer = styled.div`
+  width: 100%;
+`;
+
+const StyledBoardName = styled.div`
+  padding: 10px;
+`;
+
+const StyledNewTask = styled.div`
+  background-color: #635fc7;
+  color: white;
+  border-radius: 25px;
+  padding: 10px;
+  font-size: 14px;
+`;
+
+const StyledEllipsisContainer = styled.div`
+  position: relative;
+  margin-left: 45px;
+  right: 20px;
+  top: 7px;
+`;
+
+const StyledEllipsisModal = styled.div`
+  position: absolute;
+  zindex: 10;
+  right: 1px;
+  background-color: #635fc7;
+  color: white;
+  padding: 20px;
+`;
+
+const StyledBoardFunctions = styled.div`
+  display: flex;
+`;
+
 const Dashboard = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteBoardModal, setShowDeleteBoardModal] = useState(false);
   const [showEllipsisModal, setShowEllipsisModal] = useState(false);
+  const {
+    state: { selectedBoard },
+  } = useContext(BoardContext);
 
   return (
     <StyledContainer>
-      <div style={{ borderRight: "0.1px solid grey" }}>
+      <StyledSidebar>
         <BoardsSidebar />
-      </div>
-      <div style={{ width: "100%" }}>
+      </StyledSidebar>
+      <StyledMainContainer>
         <StyledHeader>
-          <div>Dashboard Header</div>
-          <div style={{ display: "flex" }}>
-            <div
-              onClick={() => setShowAddModal(true)}
-              style={{
-                backgroundColor: "#635FC7",
-                color: "white",
-                borderRadius: "25px",
-                padding: "10px",
-                fontSize: "14px",
-              }}
-            >
+          <StyledBoardName>{selectedBoard?.name}</StyledBoardName>
+          <StyledBoardFunctions>
+            <StyledNewTask onClick={() => setShowAddModal(true)}>
               + Add New Task
-            </div>
+            </StyledNewTask>
 
-            <div
+            <StyledEllipsisContainer
               onClick={() => setShowEllipsisModal(!showEllipsisModal)}
-              style={{
-                position: "relative",
-                marginLeft: "45px",
-                right: "20px",
-                top: "7px",
-              }}
             >
               <EllipsisSvg />
               {showEllipsisModal ? (
-                <div
-                  style={{
-                    position: "absolute",
-                    zIndex: "10",
-                    right: "1px",
-                    backgroundColor: "#635FC7",
-                    color: "white",
-                    padding: "20px",
-                  }}
-                >
+                <StyledEllipsisModal>
                   <div
                     onClick={() => setShowDeleteBoardModal(true)}
                     style={{ marginBottom: "10px" }}
@@ -80,13 +99,13 @@ const Dashboard = () => {
                     Delete
                   </div>
                   <div onClick={() => setShowEditModal(true)}>Edit</div>
-                </div>
+                </StyledEllipsisModal>
               ) : null}
-            </div>
-          </div>
+            </StyledEllipsisContainer>
+          </StyledBoardFunctions>
         </StyledHeader>
         <BoardContent />
-      </div>
+      </StyledMainContainer>
       <AddNewTask
         setShowAddModal={setShowAddModal}
         showAddModal={showAddModal}

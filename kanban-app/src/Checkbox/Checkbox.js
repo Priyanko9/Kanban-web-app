@@ -26,7 +26,7 @@ const StyledText = styled.span`
     props.checked && props.strikeThrough ? "line-through" : "none"};
 `;
 
-const Checkbox = ({ textLabel, strikeThrough, checkedState }) => {
+const Checkbox = ({ textLabel, strikeThrough, checkedState, inputProps }) => {
   const [checked, setIsChecked] = useState(checkedState || false);
   return (
     <>
@@ -35,6 +35,7 @@ const Checkbox = ({ textLabel, strikeThrough, checkedState }) => {
           type="checkbox"
           onChange={() => setIsChecked(!checked)}
           checked={checked}
+          {...inputProps}
         />
         {checked ? (
           <StyledSvgContainer>

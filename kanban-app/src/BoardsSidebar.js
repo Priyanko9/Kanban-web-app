@@ -33,6 +33,12 @@ const StyledKanbanLogo = styled.div`
   margin-top: 10px;
 `;
 
+const StyledAllBoards = styled.div`
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+`;
+
 const BoardsSidebar = () => {
   const [selectedBoard, setSelectedBoard] = useState(0);
   const { theme } = useContext(ThemeContext);
@@ -52,15 +58,7 @@ const BoardsSidebar = () => {
         <KanbanSvg />
       </StyledKanbanLogo>
       <div style={{ marginTop: "20px" }}>
-        <div
-          style={{
-            marginBottom: "10px",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          All Boards ({boards?.length})
-        </div>
+        <StyledAllBoards>All Boards ({boards?.length})</StyledAllBoards>
         {boards &&
           boards.map((board, index) => {
             return (

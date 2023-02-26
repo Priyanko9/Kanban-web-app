@@ -3,6 +3,24 @@ import { useContext, useState } from "react";
 import Modal from "./Modal";
 import { BoardContext } from "./BoardContext";
 
+const StyledModalContainer = styled.div`
+  width: 200px;
+  background: white;
+  padding: 20px;
+  position: relative;
+`;
+
+const StyledSelect = styled.select`
+  width: 100%;
+  padding: 5px;
+`;
+
+const StyledCloseModal = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
+
 const AddNewTask = ({ setShowAddModal, showAddModal }) => {
   const { addNewTask } = useContext(BoardContext);
   const [title, setTitle] = useState("");
@@ -36,14 +54,7 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
 
   return showAddModal ? (
     <Modal>
-      <div
-        style={{
-          width: "200px",
-          background: "white",
-          padding: "20px",
-          position: "relative",
-        }}
-      >
+      <StyledModalContainer>
         <div>
           <label>Title</label>
           <br />
@@ -76,23 +87,16 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
         <div>
           <div>Status</div>
           <div>
-            <select style={{ padding: "5px", width: "100%" }}>
+            <StyledSelect>
               <option>Todo</option>
-            </select>
+            </StyledSelect>
           </div>
         </div>
         <button onClick={() => createNewTask()}>Create Task</button>
-        <div
-          onClick={() => setShowAddModal(false)}
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-          }}
-        >
+        <StyledCloseModal onClick={() => setShowAddModal(false)}>
           X
-        </div>
-      </div>
+        </StyledCloseModal>
+      </StyledModalContainer>
     </Modal>
   ) : null;
 };

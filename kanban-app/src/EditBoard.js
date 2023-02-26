@@ -82,18 +82,7 @@ const EditBoard = ({ editBoardModal, setEditBoardModal }) => {
             return (
               <div key={i}>
                 <span>
-                  {col.name ? (
-                    <StyledInput
-                      type="text"
-                      defaultValue={col.name}
-                      onChange={(e) => addColumnName(e.target.value)}
-                    />
-                  ) : (
-                    <StyledInput
-                      type="text"
-                      onChange={(e) => addColumnName(e.target.value)}
-                    />
-                  )}
+                  <StyledInput type="text" value={col.name} readOnly />
                 </span>
                 <span onClick={() => removeColumn(i)}>X</span>
               </div>

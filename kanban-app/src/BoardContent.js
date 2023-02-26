@@ -5,6 +5,16 @@ import { BoardContext } from "./BoardContext";
 import ViewTask from "./ViewTask";
 import EditTask from "./EditTask";
 
+const getBgColor = (name) => {
+  if (name === "Todo") {
+    return "#49c4e5";
+  } else if (name === "Doing") {
+    return "#8471F2";
+  } else if (name === "Done") {
+    return "#67E2AE";
+  }
+};
+
 const StyledTaskTitle = styled.div`
   padding: 20px;
   width: 70%;
@@ -22,6 +32,39 @@ const StyledTaskTile = styled.div`
   display: flex;
 `;
 
+const StyledColumnName = styled.div`
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+`;
+
+const StyledSignal = styled.div`
+  width: 10px;
+  height: 10px;
+  border-radius: 25px;
+  background-color: ${(props) => getBgColor(props.name)};
+  margin-right: 5px;
+`;
+
+const StyledColumnContainer = styled.div`
+  margin-left: 10px;
+  width: 33%;
+`;
+
+const StyledTaskContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledSubTask = styled.div`
+  font-size: 11px;
+  margin-top: 10px;
+`;
+
+const StyledEdit = styled.div`
+  margin-top: 10px;
+`;
+
 const calculateCompletedSubtask = (subtasks) => {
   let count = 0;
   subtasks.forEach((subtask, ele) => {
@@ -32,7 +75,7 @@ const calculateCompletedSubtask = (subtasks) => {
   return count;
 };
 
-const BoardContent = ({ board }) => {
+const BoardContent = () => {
   const { theme } = useContext(ThemeContext);
   const contextValue = useContext(BoardContext);
   const { state, editTask, deleteTask } = contextValue;
@@ -86,22 +129,28 @@ const BoardContent = ({ board }) => {
       <StyledTaskTile theme={theme}>
         {selectedBoard?.columns?.map((column, i) => {
           return (
-            <div style={{ marginLeft: "10px", width: "33%" }}>
-              <div style={{ marginBottom: "10px" }}>
-                {column.name} ({column?.tasks.length})
-              </div>
+            <StyledColumnContainer key={i}>
+              <StyledColumnName>
+                <StyledSignal name={column.name} />
+                <div>
+                  {column.name} ({column?.tasks.length})
+                </div>
+              </StyledColumnName>
               {column?.tasks?.map((task, index) => {
                 const completedTask = calculateCompletedSubtask(task.subtasks);
                 return (
-                  <StyledTaskTitle onClick={() => onTaskClick(task)}>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
+                  <StyledTaskTitle
+                    onClick={() => onTaskClick(task)}
+                    key={index}
+                  >
+                    <StyledTaskContainer>
                       <div>
                         <b>{task.title}</b>
                       </div>
-                      <div style={{ fontSize: "11px", marginTop: "10px" }}>
+                      <StyledSubTask>
                         {completedTask} of {task.subtasks.length} subtasks
-                      </div>
-                      <div
+                      </StyledSubTask>
+                      <StyledEdit
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedTask(task);
@@ -112,11 +161,10 @@ const BoardContent = ({ board }) => {
                             selectedTaskObj: task,
                           });
                         }}
-                        style={{ marginTop: "10px" }}
                       >
                         Edit
-                      </div>
-                    </div>
+                      </StyledEdit>
+                    </StyledTaskContainer>
                     <div
                       onClick={(e) => {
                         e.stopPropagation();
@@ -133,7 +181,7 @@ const BoardContent = ({ board }) => {
                   </StyledTaskTitle>
                 );
               })}
-            </div>
+            </StyledColumnContainer>
           );
         })}
       </StyledTaskTile>
