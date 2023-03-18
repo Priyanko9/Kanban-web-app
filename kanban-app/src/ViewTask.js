@@ -1,5 +1,6 @@
 import Modal from "./Modal";
-import Checkbox from "./Checkbox/Checkbox";
+import Checkbox from "./Atoms/Checkbox";
+import SelectBox from "./Atoms/Selectbox";
 
 const ViewTask = ({
   selectedTask,
@@ -44,9 +45,10 @@ const ViewTask = ({
         <div>
           <div>Status</div>
           <div>
-            <select style={{ padding: "5px", width: "100%" }}>
-              <option>{selectedTask.status}</option>
-            </select>
+            <SelectBox
+              defaultValue={selectedTask.status}
+              defaultName={selectedTask.status}
+            />
           </div>
         </div>
         <div

@@ -2,17 +2,14 @@ import styled from "styled-components";
 import { useContext, useState } from "react";
 import Modal from "./Modal";
 import { BoardContext } from "./BoardContext";
+import Textbox from "./Atoms/Input";
+import SelectBox from "./Atoms/Selectbox";
 
 const StyledModalContainer = styled.div`
   width: 200px;
   background: white;
   padding: 20px;
   position: relative;
-`;
-
-const StyledSelect = styled.select`
-  width: 100%;
-  padding: 5px;
 `;
 
 const StyledCloseModal = styled.div`
@@ -58,7 +55,7 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
         <div>
           <label>Title</label>
           <br />
-          <input type="text" onChange={(e) => setTitle(e.target.value)} />
+          <Textbox onChange={(e) => setTitle(e.target.value)} />
         </div>
         <div>
           <label>Description</label>
@@ -70,12 +67,9 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
             return (
               <div>
                 {ele.title ? (
-                  <input type="text" value={ele.title} />
+                  <Textbox value={ele.title} />
                 ) : (
-                  <input
-                    type="text"
-                    onChange={(e) => addSubtaskName(e.target.value)}
-                  />
+                  <Textbox onChange={(e) => addSubtaskName(e.target.value)} />
                 )}
 
                 <span onClick={() => removeSubtask(i)}>X</span>
@@ -87,9 +81,7 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
         <div>
           <div>Status</div>
           <div>
-            <StyledSelect>
-              <option>Todo</option>
-            </StyledSelect>
+            <SelectBox defaultValue="Todo" defaultName="Todo" />
           </div>
         </div>
         <button onClick={() => createNewTask()}>Create Task</button>

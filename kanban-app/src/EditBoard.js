@@ -2,14 +2,8 @@ import { useContext, useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { BoardContext } from "./BoardContext";
 import Modal from "./Modal";
+import Textbox from "./Atoms/Input";
 
-const StyledInput = styled.input`
-  width: 300px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  height: 25px;
-`;
 const StyledContainer = styled.div`
   background-color: white;
   padding: 20px;
@@ -44,9 +38,9 @@ const EditBoard = ({ editBoardModal, setEditBoardModal }) => {
     setColumns([...columns]);
   };
 
-  const addColumnName = (name) => {
-    columns[columns.length - 1].name = name;
-  };
+  // const addColumnName = (name) => {
+  //   columns[columns.length - 1].name = name;
+  // };
 
   const removeColumn = (index) => {
     columns.splice(index, 1);
@@ -65,12 +59,11 @@ const EditBoard = ({ editBoardModal, setEditBoardModal }) => {
   return editBoardModal ? (
     <Modal>
       <StyledContainer>
-        <h3>Add New Board</h3>
+        <h3>Edit Board</h3>
         <div>
           <label>Name</label>
           <div style={{ marginTop: "10px" }}>
-            <StyledInput
-              type="text"
+            <Textbox
               value={boardName}
               onChange={(e) => setBoardName(e.target.value)}
             />
@@ -82,7 +75,7 @@ const EditBoard = ({ editBoardModal, setEditBoardModal }) => {
             return (
               <div key={i}>
                 <span>
-                  <StyledInput type="text" value={col.name} readOnly />
+                  <Textbox value={col.name} readOnly />
                 </span>
                 <span onClick={() => removeColumn(i)}>X</span>
               </div>

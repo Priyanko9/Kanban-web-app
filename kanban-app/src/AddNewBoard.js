@@ -2,23 +2,19 @@ import { useContext, useState } from "react";
 import styled from "styled-components";
 import { BoardContext } from "./BoardContext";
 import Modal from "./Modal";
+import { ThemeContext } from "./App";
+import Textbox from "./Atoms/Input";
 
-const StyledInput = styled.input`
-  width: 300px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  height: 25px;
-`;
 const StyledContainer = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 10px;
+  position: relative;
 `;
 
 const StyledButton = styled.button`
   width: 90%;
-  background: silver;
+  background: ${(props) => props.color};
   border-radius: 25px;
   padding: 10px;
   margin-bottom: 10px;
@@ -30,11 +26,18 @@ const StyledInputContainer = styled.div`
   margin-top: 10px;
 `;
 
+const StyledCloseModal = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
+
 const AddNewBoard = ({ addBoardModal, setAddBoardModal }) => {
   const [columns, setColumns] = useState([]);
   const [boardName, setBoardName] = useState("");
   const contextValue = useContext(BoardContext);
   const { createNewBoard } = contextValue;
+  const { theme } = useContext(ThemeContext);
 
   const addNewColumn = () => {
     columns.push({ name: "", tasks: [] });
@@ -66,10 +69,7 @@ const AddNewBoard = ({ addBoardModal, setAddBoardModal }) => {
         <div>
           <label>Name</label>
           <StyledInputContainer>
-            <StyledInput
-              type="text"
-              onChange={(e) => setBoardName(e.target.value)}
-            />
+            <Textbox onChange={(e) => setBoardName(e.target.value)} />
           </StyledInputContainer>
         </div>
         <div>
@@ -78,20 +78,22 @@ const AddNewBoard = ({ addBoardModal, setAddBoardModal }) => {
             return (
               <div>
                 <span>
-                  <StyledInput
-                    type="text"
-                    onChange={(e) => addColumnName(e.target.value)}
-                  />
+                  <Textbox onChange={(e) => addColumnName(e.target.value)} />
                 </span>
                 <span onClick={() => removeColumn(i)}>X</span>
               </div>
             );
           })}
         </div>
-        <StyledButton onClick={addNewColumn}>+ Add New Column</StyledButton>
-        <StyledButton onClick={createNewBoardFunc}>
+        <StyledButton onClick={addNewColumn} color={theme.colors.silver}>
+          + Add New Column
+        </StyledButton>
+        <StyledButton onClick={createNewBoardFunc} color={theme.colors.violet}>
           Create New Board
         </StyledButton>
+        <StyledCloseModal onClick={() => setAddBoardModal(false)}>
+          X
+        </StyledCloseModal>
       </StyledContainer>
     </Modal>
   ) : null;

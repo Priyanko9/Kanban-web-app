@@ -2,14 +2,8 @@ import { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import Modal from "./Modal";
 import { BoardContext } from "./BoardContext";
-
-const StyledInput = styled.input`
-  width: 300px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  height: 25px;
-`;
+import Textbox from "./Atoms/Input";
+import SelectBox from "./Atoms/Selectbox";
 
 const StyledContainer = styled.div`
   background-color: white;
@@ -57,7 +51,7 @@ const EditTask = ({
                 }}
               >
                 <span>
-                  <StyledInput type="text" value={ele.title} />
+                  <Textbox value={ele.title} />
                 </span>
                 <span onClick={() => removeColumn(index)}>X</span>
               </div>
@@ -66,15 +60,12 @@ const EditTask = ({
         </div>
         <div>Status</div>
         <div>
-          <select
-            style={{ padding: "5px", width: "100%" }}
+          <SelectBox
             onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value={selectedTask.status}>{selectedTask.status}</option>
-            {statusList?.map((ele, i) => (
-              <option value={ele}>{ele}</option>
-            ))}
-          </select>
+            defaultValue={selectedTask.status}
+            defaultName={selectedTask.status}
+            optionList={statusList}
+          />
         </div>
         <button
           onClick={() => {
