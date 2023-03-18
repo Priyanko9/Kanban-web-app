@@ -1,41 +1,48 @@
-const Theme={
-    lightTheme:{
-        "background":"#ffffff"
+const Theme = {
+  lightTheme: {
+    background: "#ffffff",
+  },
+  darkTheme: {
+    background: "#000000",
+  },
+  colors: {
+    violet: "#635FC7",
+    lightViolet: "#A8A4FF",
+    black: "#000112",
+    lightBlack: "#20212C",
+    darkBlack: "2B2C37",
+    grey: "#3E3F4E",
+    lightGrey: "#828FA3",
+    silver: "#E4EBFA",
+    lightSilver: "#F4F7FD",
+    white: "#FFFFFF",
+    orange: "#EA5555",
+    lightOrange: "#FF9898",
+  },
+  text: {
+    fontFamily: {
+      jakarta: "Plus Jakarta Sans",
     },
-    darkTheme:{
-        "background":"#000000"
+    fontWeight: {
+      bold: "bold",
+      medium: "medium",
     },
-    colors:{
-        "violet":"#635FC7",
-        "lightViolet":"#A8A4FF",
-        "black":"#000112",
-        "lightBlack":"#20212C",
-        "darkBlack":"2B2C37",
-        "grey":"#3E3F4E",
-        "lightGrey":"#828FA3",
-        "silver":"#E4EBFA",
-        "lightSilver":"#F4F7FD",
-        "white":"#FFFFFF",
-        "orange":"#EA5555",
-        "lightOrange":"#FF9898"
+    fontSize: {
+      small: "12px",
+      medium: "13px",
+      large: "15px",
+      "x-large": "18px",
+      "xx-large": "24px",
     },
-    text:{
-        "fontFamily":{
-            "jakarta":"Plus Jakarta Sans"
-        },
-        "fontWeight":{
-            "bold":"bold",
-            "medium":"medium"
-        },
-        "fontSize":{
-            "small":"12px",
-            "medium":"13px",
-            "large":"15px",
-            "x-large":"18px",
-            "xx-large":"24px"
-        }
+  },
+  button: {
+    primary: {
+      bgcolor: "#635FC7",
     },
-
-} 
+    secondary: {
+      bgcolor: "#E4EBFA",
+    },
+  },
+};
 
 export default Theme;

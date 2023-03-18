@@ -14,12 +14,20 @@ const StyledContainer = styled.div`
 
 const StyledButton = styled.button`
   width: 90%;
-  background: ${(props) => props.color};
+  background: ${(props) =>
+    props.isSecondary
+      ? props.theme.button.secondary.bgcolor
+      : props.theme.button.primary.bgcolor};
   border-radius: 25px;
   padding: 10px;
   margin-bottom: 10px;
   text-align: center;
   margin-top: 10px;
+  border: 1px solid
+    ${(props) =>
+      props.isSecondary
+        ? props.theme.button.secondary.bgcolor
+        : props.theme.button.primary.bgcolor};
 `;
 
 const StyledInputContainer = styled.div`
@@ -85,10 +93,10 @@ const AddNewBoard = ({ addBoardModal, setAddBoardModal }) => {
             );
           })}
         </div>
-        <StyledButton onClick={addNewColumn} color={theme.colors.silver}>
+        <StyledButton onClick={addNewColumn} theme={theme} isSecondary>
           + Add New Column
         </StyledButton>
-        <StyledButton onClick={createNewBoardFunc} color={theme.colors.violet}>
+        <StyledButton onClick={createNewBoardFunc} theme={theme}>
           Create New Board
         </StyledButton>
         <StyledCloseModal onClick={() => setAddBoardModal(false)}>
