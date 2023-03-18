@@ -6,7 +6,6 @@ import Textbox from "./Atoms/Input";
 import SelectBox from "./Atoms/Selectbox";
 
 const StyledModalContainer = styled.div`
-  width: 200px;
   background: white;
   padding: 20px;
   position: relative;
@@ -21,6 +20,7 @@ const StyledCloseModal = styled.div`
 const AddNewTask = ({ setShowAddModal, showAddModal }) => {
   const { addNewTask } = useContext(BoardContext);
   const [title, setTitle] = useState("");
+  const [titleError, setTitleError] = useState(false);
   const [description, setDescription] = useState("");
   // const [status, setStatus] = useState("");
   const [subtasks, setSubtasks] = useState([{ title: "", isCompleted: false }]);
@@ -34,14 +34,46 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
     setSubtasks([...subtasks]);
   };
 
-  const createNewTask = () => {
-    addNewTask({
-      title,
-      description,
-      status: "Todo",
-      subtasks,
+  const checkSubTaskIsEmpty = () => {
+    let checkError = false;
+    let newSubtasks = subtasks.map((task) => {
+      if (task.title === "") {
+        task.isError = true;
+        checkError = true;
+      }
+      return task;
     });
-    setShowAddModal(false);
+    setSubtasks(newSubtasks);
+    return checkError;
+  };
+
+  const checkError = () => {
+    let error = false;
+    if (title === "") {
+      setTitleError(true);
+      error = true;
+    }
+    if (checkSubTaskIsEmpty()) {
+      error = true;
+    }
+    return error;
+  };
+
+  const resetSubtask = () => {
+    setSubtasks([{ title: "", isCompleted: false }]);
+  };
+
+  const createNewTask = () => {
+    if (!checkError()) {
+      addNewTask({
+        title,
+        description,
+        status: "Todo",
+        subtasks,
+      });
+      setShowAddModal(false);
+      resetSubtask();
+    }
   };
 
   const removeSubtask = (index) => {
@@ -55,11 +87,21 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
         <div>
           <label>Title</label>
           <br />
-          <Textbox onChange={(e) => setTitle(e.target.value)} />
+          <Textbox
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setTitleError(false);
+            }}
+            isError={titleError}
+          />
         </div>
         <div>
           <label>Description</label>
-          <textarea onChange={(e) => setDescription(e.target.value)} />
+          <br />
+          <textarea
+            onChange={(e) => setDescription(e.target.value)}
+            style={{ width: "300px", height: "150px" }}
+          />
         </div>
         <div>
           <label>Subtasks</label>
@@ -69,7 +111,10 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
                 {ele.title ? (
                   <Textbox value={ele.title} />
                 ) : (
-                  <Textbox onChange={(e) => addSubtaskName(e.target.value)} />
+                  <Textbox
+                    onChange={(e) => addSubtaskName(e.target.value)}
+                    isError={ele.isError}
+                  />
                 )}
 
                 <span onClick={() => removeSubtask(i)}>X</span>
@@ -85,7 +130,12 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
           </div>
         </div>
         <button onClick={() => createNewTask()}>Create Task</button>
-        <StyledCloseModal onClick={() => setShowAddModal(false)}>
+        <StyledCloseModal
+          onClick={() => {
+            setShowAddModal(false);
+            resetSubtask();
+          }}
+        >
           X
         </StyledCloseModal>
       </StyledModalContainer>

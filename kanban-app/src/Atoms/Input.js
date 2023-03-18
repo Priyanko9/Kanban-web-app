@@ -7,6 +7,7 @@ const StyledTextbox = styled.input`
   margin-top: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
+  ${(props) => (props.isError ? `border:1px solid red;` : ``)}
   height: 25px;
 `;
 
