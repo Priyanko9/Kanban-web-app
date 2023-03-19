@@ -4,6 +4,7 @@ import Modal from "./Modal";
 import { BoardContext } from "./BoardContext";
 import Textbox from "./Atoms/Input";
 import SelectBox from "./Atoms/Selectbox";
+import Button from "./Atoms/Button";
 import { ThemeContext } from "./App";
 
 const StyledModalContainer = styled.div`
@@ -19,34 +20,11 @@ const StyledCloseModal = styled.div`
   right: 10px;
 `;
 
-const StyledButton = styled.button`
-  width: 100%;
-  background: ${(props) =>
-    props.isSecondary
-      ? props.theme.button.secondary.bgcolor
-      : props.theme.button.primary.bgcolor};
-  border-radius: 25px;
-  padding: 10px;
-  margin-bottom: 10px;
-  text-align: center;
-  margin-top: 10px;
-  color: ${(props) =>
-    props.isSecondary
-      ? props.theme.button.secondary.textColor
-      : props.theme.button.primary.textColor};
-  border: 1px solid
-    ${(props) =>
-      props.isSecondary
-        ? props.theme.button.secondary.bgcolor
-        : props.theme.button.primary.bgcolor};
-`;
-
 const AddNewTask = ({ setShowAddModal, showAddModal }) => {
   const { addNewTask } = useContext(BoardContext);
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState(false);
   const [description, setDescription] = useState("");
-  // const [status, setStatus] = useState("");
   const [subtasks, setSubtasks] = useState([{ title: "", isCompleted: false }]);
   const { theme } = useContext(ThemeContext);
 
@@ -147,9 +125,9 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
               </div>
             );
           })}
-          <StyledButton onClick={addNewSubtask} theme={theme} isSecondary>
+          <Button onClick={addNewSubtask} theme={theme} isSecondary>
             Create New Subtask
-          </StyledButton>
+          </Button>
         </div>
         <div>
           <div>Status</div>
@@ -157,9 +135,9 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
             <SelectBox defaultValue="Todo" defaultName="Todo" />
           </div>
         </div>
-        <StyledButton onClick={() => createNewTask()} theme={theme}>
+        <Button onClick={() => createNewTask()} theme={theme}>
           Create Task
-        </StyledButton>
+        </Button>
         <StyledCloseModal
           onClick={() => {
             setShowAddModal(false);

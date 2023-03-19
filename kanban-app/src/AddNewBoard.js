@@ -4,31 +4,13 @@ import { BoardContext } from "./BoardContext";
 import Modal from "./Modal";
 import { ThemeContext } from "./App";
 import Textbox from "./Atoms/Input";
+import Button from "./Atoms/Button";
 
 const StyledContainer = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   position: relative;
-`;
-
-const StyledButton = styled.button`
-  width: 90%;
-  background: ${(props) =>
-    props.isSecondary
-      ? props.theme.button.secondary.bgcolor
-      : props.theme.button.primary.bgcolor};
-  border-radius: 25px;
-  padding: 10px;
-  margin-bottom: 10px;
-  text-align: center;
-  margin-top: 10px;
-  color: white;
-  border: 1px solid
-    ${(props) =>
-      props.isSecondary
-        ? props.theme.button.secondary.bgcolor
-        : props.theme.button.primary.bgcolor};
 `;
 
 const StyledInputContainer = styled.div`
@@ -94,12 +76,12 @@ const AddNewBoard = ({ addBoardModal, setAddBoardModal }) => {
             );
           })}
         </div>
-        <StyledButton onClick={addNewColumn} theme={theme} isSecondary>
+        <Button onClick={addNewColumn} theme={theme} isSecondary>
           + Add New Column
-        </StyledButton>
-        <StyledButton onClick={createNewBoardFunc} theme={theme}>
+        </Button>
+        <Button onClick={createNewBoardFunc} theme={theme}>
           Create New Board
-        </StyledButton>
+        </Button>
         <StyledCloseModal onClick={() => setAddBoardModal(false)}>
           X
         </StyledCloseModal>

@@ -3,21 +3,12 @@ import styled from "styled-components";
 import { BoardContext } from "./BoardContext";
 import Modal from "./Modal";
 import Textbox from "./Atoms/Input";
+import Button from "./Atoms/Button";
 
 const StyledContainer = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 10px;
-`;
-
-const StyledButton = styled.button`
-  width: 90%;
-  background: silver;
-  border-radius: 25px;
-  padding: 10px;
-  margin-bottom: 10px;
-  text-align: center;
-  margin-top: 10px;
 `;
 
 const EditBoard = ({ editBoardModal, setEditBoardModal }) => {
@@ -37,10 +28,6 @@ const EditBoard = ({ editBoardModal, setEditBoardModal }) => {
     columns.push({ name: "", tasks: [] });
     setColumns([...columns]);
   };
-
-  // const addColumnName = (name) => {
-  //   columns[columns.length - 1].name = name;
-  // };
 
   const removeColumn = (index) => {
     columns.splice(index, 1);
@@ -82,8 +69,10 @@ const EditBoard = ({ editBoardModal, setEditBoardModal }) => {
             );
           })}
         </div>
-        <StyledButton onClick={addNewColumn}>+ Add New Column</StyledButton>
-        <StyledButton onClick={editBoardFunc}>Save Changes</StyledButton>
+        <Button onClick={addNewColumn} isSecondary>
+          + Add New Column
+        </Button>
+        <Button onClick={editBoardFunc}>Save Changes</Button>
       </StyledContainer>
     </Modal>
   ) : null;

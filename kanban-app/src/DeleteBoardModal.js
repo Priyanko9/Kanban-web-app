@@ -1,7 +1,9 @@
 import styled from "styled-components";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import Modal from "./Modal";
 import { BoardContext } from "./BoardContext";
+import Button from "./Atoms/Button";
+import { ThemeContext } from "./App";
 
 const StyledContainer = styled.div`
   background-color: white;
@@ -9,14 +11,8 @@ const StyledContainer = styled.div`
   border-radius: 10px;
 `;
 
-const StyledButton = styled.button`
-  width: 90%;
-  background: silver;
-  border-radius: 25px;
-  padding: 10px;
-  margin-bottom: 10px;
-  text-align: center;
-  margin-top: 10px;
+const StyledButtonContainer = styled.div`
+  display: flex;
 `;
 
 const DeleteBoardModal = ({
@@ -24,6 +20,8 @@ const DeleteBoardModal = ({
   showDeleteBoardModal,
 }) => {
   const { deleteBoard: deleteBoardFunc } = useContext(BoardContext);
+  const { theme } = useContext(ThemeContext);
+
   const deleteBoard = () => {
     deleteBoardFunc();
     setShowDeleteBoardModal(false);
@@ -37,12 +35,18 @@ const DeleteBoardModal = ({
           Are you sure you want to delete this board? This action will remove
           all columns and tasks and cannot be reversed.
         </div>
-        <div>
-          <StyledButton onClick={() => deleteBoard()}>Delete</StyledButton>
-          <StyledButton onClick={() => setShowDeleteBoardModal(false)}>
+        <StyledButtonContainer>
+          <Button onClick={() => deleteBoard()} theme={theme} isDestructive>
+            Delete
+          </Button>
+          <Button
+            onClick={() => setShowDeleteBoardModal(false)}
+            theme={theme}
+            isSecondary
+          >
             Cancel
-          </StyledButton>
-        </div>
+          </Button>
+        </StyledButtonContainer>
       </StyledContainer>
     </Modal>
   ) : null;

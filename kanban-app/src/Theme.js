@@ -44,6 +44,10 @@ const Theme = {
       bgcolor: "#E4EBFA",
       textColor: "#635FC7",
     },
+    destructive: {
+      bgcolor: "#EA5555",
+      textColor: "#ffffff",
+    },
   },
 };
 

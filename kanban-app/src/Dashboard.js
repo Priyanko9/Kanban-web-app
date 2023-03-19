@@ -8,6 +8,7 @@ import BoardContent from "./BoardContent";
 import AddNewTask from "./AddNewTask";
 import DeleteBoardModal from "./DeleteBoardModal";
 import EditBoardModal from "./EditBoard";
+import Button from "./Atoms/Button";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -34,14 +35,6 @@ const StyledMainContainer = styled.div`
 
 const StyledBoardName = styled.div`
   padding: 10px;
-`;
-
-const StyledNewTask = styled.div`
-  background-color: #635fc7;
-  color: white;
-  border-radius: 25px;
-  padding: 10px;
-  font-size: 14px;
 `;
 
 const StyledEllipsisContainer = styled.div`
@@ -73,6 +66,8 @@ const Dashboard = () => {
     state: { selectedBoard },
   } = useContext(BoardContext);
 
+  const { theme } = useContext(ThemeContext);
+
   return (
     <StyledContainer>
       <StyledSidebar>
@@ -82,9 +77,9 @@ const Dashboard = () => {
         <StyledHeader>
           <StyledBoardName>{selectedBoard?.name}</StyledBoardName>
           <StyledBoardFunctions>
-            <StyledNewTask onClick={() => setShowAddModal(true)}>
+            <Button theme={theme} onClick={() => setShowAddModal(true)}>
               + Add New Task
-            </StyledNewTask>
+            </Button>
 
             <StyledEllipsisContainer
               onClick={() => setShowEllipsisModal(!showEllipsisModal)}

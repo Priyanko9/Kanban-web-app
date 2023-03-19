@@ -4,6 +4,8 @@ import Modal from "./Modal";
 import { BoardContext } from "./BoardContext";
 import Textbox from "./Atoms/Input";
 import SelectBox from "./Atoms/Selectbox";
+import Button from "./Atoms/Button";
+import { ThemeContext } from "./App";
 
 const StyledContainer = styled.div`
   background-color: white;
@@ -22,6 +24,7 @@ const EditTask = ({
   const statusList = calculateStatusArray();
   const contextValue = useContext(BoardContext);
   const { state, editTask } = contextValue;
+  const { theme } = useContext(ThemeContext);
 
   const [selectedTask, setCurrentTask] = useState({});
 
@@ -67,7 +70,7 @@ const EditTask = ({
             optionList={statusList}
           />
         </div>
-        <button
+        <Button
           onClick={() => {
             editTask({
               ...editData,
@@ -77,9 +80,10 @@ const EditTask = ({
             setShowEditModal(false);
             localStorage.setItem("appState", JSON.stringify(state));
           }}
+          theme={theme}
         >
           Save
-        </button>
+        </Button>
       </StyledContainer>
     </Modal>
   ) : null;
