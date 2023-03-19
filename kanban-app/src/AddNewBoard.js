@@ -23,6 +23,7 @@ const StyledButton = styled.button`
   margin-bottom: 10px;
   text-align: center;
   margin-top: 10px;
+  color: white;
   border: 1px solid
     ${(props) =>
       props.isSecondary

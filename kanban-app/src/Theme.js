@@ -38,9 +38,11 @@ const Theme = {
   button: {
     primary: {
       bgcolor: "#635FC7",
+      textColor: "#ffffff",
     },
     secondary: {
       bgcolor: "#E4EBFA",
+      textColor: "#635FC7",
     },
   },
 };

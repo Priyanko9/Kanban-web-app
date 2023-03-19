@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { ReactComponent as CheckmarkSvg } from "../assets/icon-check.svg";
 
 const StyledTextbox = styled.input`
-  width: 300px;
+  width: 90%;
   margin-top: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
