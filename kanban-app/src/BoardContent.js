@@ -136,6 +136,7 @@ const BoardContent = () => {
       selectedColumn: column,
     });
     localStorage.setItem("appState", JSON.stringify(state));
+    setShowModal(false);
   };
 
   const editTaskFunc = (e, index, column, task) => {
@@ -147,6 +148,7 @@ const BoardContent = () => {
       selectedColumn: column,
       selectedTaskObj: task,
     });
+    setShowModal(false);
   };
 
   const dragEnd = (result) => {

@@ -15,8 +15,8 @@ const StyledTaskContainer = styled.div`
 `;
 
 const StyledCloseLink = styled.div`
-  align-self: end;
   cursor: pointer;
+  width: 20px;
 `;
 
 const StyledTitle = styled.div`
@@ -34,10 +34,8 @@ const StyledCheckboxContainer = styled.div`
 `;
 
 const StyledEllipsisContainer = styled.div`
+  align-self: end;
   position: relative;
-  margin-left: 45px;
-  right: 20px;
-  top: 7px;
 `;
 
 const StyledEllipsisModal = styled.div`
@@ -60,29 +58,36 @@ const ViewTask = ({
   taskIndex,
 }) => {
   const [showEllipsisModal, setShowEllipsisModal] = useState(false);
+
+  const deleteTask = (e) => {
+    deleteTaskFunc(e, taskIndex, column);
+    setShowEllipsisModal(false);
+  };
+
+  const editTask = (e) => {
+    editTaskFunc(e, taskIndex, column, selectedTask);
+    setShowEllipsisModal(false);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setShowEllipsisModal(false);
+  };
+
   return showModal ? (
     <Modal>
       <StyledTaskContainer>
-        <StyledCloseLink onClick={() => setShowModal(false)}>X</StyledCloseLink>
+        <StyledCloseLink onClick={closeModal}>X</StyledCloseLink>
         <StyledEllipsisContainer
           onClick={() => setShowEllipsisModal(!showEllipsisModal)}
         >
           <EllipsisSvg />
           {showEllipsisModal ? (
             <StyledEllipsisModal>
-              <div
-                onClick={(e) => deleteTaskFunc(e, taskIndex, column)}
-                style={{ marginBottom: "10px" }}
-              >
+              <div onClick={deleteTask} style={{ marginBottom: "10px" }}>
                 Delete Task
               </div>
-              <div
-                onClick={(e) =>
-                  editTaskFunc(e, taskIndex, column, selectedTask)
-                }
-              >
-                Edit Task
-              </div>
+              <div onClick={editTask}>Edit Task</div>
             </StyledEllipsisModal>
           ) : null}
         </StyledEllipsisContainer>
