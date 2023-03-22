@@ -71,7 +71,7 @@ const StyledEdit = styled.div`
 
 const calculateCompletedSubtask = (subtasks) => {
   let count = 0;
-  subtasks.forEach((subtask, ele) => {
+  subtasks.forEach((subtask) => {
     if (subtask.isCompleted) {
       count++;
     }
@@ -168,10 +168,6 @@ const BoardContent = () => {
     setSelectedColumn({});
   };
 
-  const dragStart = (result) => {
-    console.log("drag Start", result);
-  };
-
   if (selectedBoard?.columns.length === 0) {
     return (
       <div>
@@ -182,7 +178,7 @@ const BoardContent = () => {
   }
   return (
     <div>
-      <DragDropContext onDragEnd={dragEnd} onDragStart={dragStart}>
+      <DragDropContext onDragEnd={dragEnd}>
         <StyledTaskTile theme={theme}>
           {selectedBoard?.columns?.map((column, i) => {
             return (

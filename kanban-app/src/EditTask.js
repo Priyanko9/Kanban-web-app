@@ -11,6 +11,20 @@ const StyledContainer = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 10px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledTextboxContainer = styled.div`
+  background: #e4ebfa;
+  margin-bottom: 5px;
+  padding: 5px;
+`;
+
+const StyledCloseButton = styled.div`
+  align-self: end;
+  cursor: pointer;
 `;
 
 const EditTask = ({
@@ -37,27 +51,35 @@ const EditTask = ({
     setCurrentTask({ ...selectedTask });
   };
 
+  const closeModal = () => {
+    setShowEditModal(false);
+  };
+
+  const saveTaskChanges = () => {
+    editTask({
+      ...editData,
+      newColumn: status,
+      selectedTaskObj: selectedTask,
+    });
+    closeModal();
+    localStorage.setItem("appState", JSON.stringify(state));
+  };
   return showEditModal ? (
     <Modal>
       <StyledContainer>
+        <StyledCloseButton onClick={closeModal}>X</StyledCloseButton>
         <div style={{ marginBottom: "10px" }}>{selectedTask.title}</div>
         <div style={{ marginBottom: "10px" }}>{selectedTask.description}</div>
         <div>
           <div>Subtasks</div>
           {selectedTask?.subtasks?.map((ele, index) => {
             return (
-              <div
-                style={{
-                  background: "#E4EBFA",
-                  marginBottom: "5px",
-                  padding: "5px",
-                }}
-              >
+              <StyledTextboxContainer>
                 <span>
                   <Textbox value={ele.title} />
                 </span>
                 <span onClick={() => removeColumn(index)}>X</span>
-              </div>
+              </StyledTextboxContainer>
             );
           })}
         </div>
@@ -70,18 +92,7 @@ const EditTask = ({
             optionList={statusList}
           />
         </div>
-        <Button
-          onClick={() => {
-            editTask({
-              ...editData,
-              newColumn: status,
-              selectedTaskObj: selectedTask,
-            });
-            setShowEditModal(false);
-            localStorage.setItem("appState", JSON.stringify(state));
-          }}
-          theme={theme}
-        >
+        <Button onClick={saveTaskChanges} theme={theme}>
           Save
         </Button>
       </StyledContainer>
