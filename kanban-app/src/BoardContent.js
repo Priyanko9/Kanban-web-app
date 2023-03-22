@@ -88,6 +88,7 @@ const BoardContent = () => {
   const [selectedTask, setSelectedTask] = useState({});
   const [editData, setEditData] = useState({});
   const [selectedColumn, setSelectedColumn] = useState({});
+  const [taskIndex, setTaskIndex] = useState(null);
 
   const { selectedBoard } = state || {};
 
@@ -98,9 +99,11 @@ const BoardContent = () => {
     });
     return statusList;
   };
-  const onTaskClick = (task) => {
+  const onTaskClick = (task, column, index) => {
     setShowModal(true);
     setSelectedTask(task);
+    setSelectedColumn(column);
+    setTaskIndex(index);
   };
   const mouseDown = (task, column) => {
     setSelectedTask(task);
@@ -148,7 +151,7 @@ const BoardContent = () => {
 
   const dragEnd = (result) => {
     const { destination, source } = result;
-    console.log("result:", result);
+
     if (!destination) {
       return;
     }
@@ -208,7 +211,7 @@ const BoardContent = () => {
                         >
                           {(provided) => (
                             <StyledTaskTitle
-                              onClick={() => onTaskClick(task)}
+                              onClick={() => onTaskClick(task, column, index)}
                               onMouseDown={() => mouseDown(task, column)}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
@@ -223,21 +226,7 @@ const BoardContent = () => {
                                   {completedTask} of {task.subtasks.length}{" "}
                                   subtasks
                                 </StyledSubTask>
-                                <StyledEdit
-                                  onClick={(e) =>
-                                    editTaskFunc(e, index, column, task)
-                                  }
-                                >
-                                  Edit
-                                </StyledEdit>
                               </StyledTaskContainer>
-                              <div
-                                onClick={(e) =>
-                                  deleteTaskFunc(e, index, column)
-                                }
-                              >
-                                X
-                              </div>
                             </StyledTaskTitle>
                           )}
                         </Draggable>
@@ -256,6 +245,10 @@ const BoardContent = () => {
         selectedTask={selectedTask}
         showModal={showModal}
         setShowModal={setShowModal}
+        taskIndex={taskIndex}
+        column={selectedColumn}
+        editTaskFunc={editTaskFunc}
+        deleteTaskFunc={deleteTaskFunc}
       />
       <EditTask
         showEditModal={showEditModal}
