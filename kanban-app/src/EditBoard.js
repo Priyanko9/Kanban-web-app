@@ -4,6 +4,7 @@ import { BoardContext } from "./BoardContext";
 import Modal from "./Modal";
 import Textbox from "./Atoms/Input";
 import Button from "./Atoms/Button";
+import { ThemeContext } from "./App";
 
 const StyledContainer = styled.div`
   background-color: white;
@@ -14,7 +15,7 @@ const StyledContainer = styled.div`
 const EditBoard = ({ editBoardModal, setEditBoardModal }) => {
   const [columns, setColumns] = useState([]);
   const [boardName, setBoardName] = useState("");
-
+  const { theme } = useContext(ThemeContext);
   const contextValue = useContext(BoardContext);
   const { state, editBoard } = contextValue;
   const { selectedBoard } = state;
@@ -69,10 +70,12 @@ const EditBoard = ({ editBoardModal, setEditBoardModal }) => {
             );
           })}
         </div>
-        <Button onClick={addNewColumn} isSecondary>
+        <Button onClick={addNewColumn} theme={theme} isSecondary>
           + Add New Column
         </Button>
-        <Button onClick={editBoardFunc}>Save Changes</Button>
+        <Button onClick={editBoardFunc} theme={theme}>
+          Save Changes
+        </Button>
       </StyledContainer>
     </Modal>
   ) : null;

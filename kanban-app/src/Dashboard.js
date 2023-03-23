@@ -42,19 +42,31 @@ const StyledEllipsisContainer = styled.div`
   margin-left: 45px;
   right: 20px;
   top: 7px;
+  cursor: pointer;
 `;
 
 const StyledEllipsisModal = styled.div`
   position: absolute;
   zindex: 10;
   right: 1px;
-  background-color: #635fc7;
+  background-color: white;
   color: white;
   padding: 20px;
+  border-radius: 15px;
+  width: max-content;
 `;
 
 const StyledBoardFunctions = styled.div`
   display: flex;
+`;
+
+const StyledEditTask = styled.div`
+  color: #635fc7;
+`;
+
+const StyledDeleteTask = styled.div`
+  color: #ea5555;
+  margin-bottom: 10px;
 `;
 
 const Dashboard = () => {
@@ -87,13 +99,14 @@ const Dashboard = () => {
               <EllipsisSvg />
               {showEllipsisModal ? (
                 <StyledEllipsisModal>
-                  <div
+                  <StyledDeleteTask
                     onClick={() => setShowDeleteBoardModal(true)}
-                    style={{ marginBottom: "10px" }}
                   >
-                    Delete
-                  </div>
-                  <div onClick={() => setShowEditModal(true)}>Edit</div>
+                    Delete Board
+                  </StyledDeleteTask>
+                  <StyledEditTask onClick={() => setShowEditModal(true)}>
+                    Edit Board
+                  </StyledEditTask>
                 </StyledEllipsisModal>
               ) : null}
             </StyledEllipsisContainer>

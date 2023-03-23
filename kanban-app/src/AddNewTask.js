@@ -18,6 +18,7 @@ const StyledCloseModal = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
+  cursor: pointer;
 `;
 
 const AddNewTask = ({ setShowAddModal, showAddModal }) => {
@@ -66,6 +67,11 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
     setSubtasks([{ title: "", isCompleted: false }]);
   };
 
+  const closeModal = () => {
+    setShowAddModal(false);
+    resetSubtask();
+  };
+
   const createNewTask = () => {
     if (!checkError()) {
       addNewTask({
@@ -84,6 +90,11 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
     setSubtasks([...subtasks]);
   };
 
+  const onChangeTitle = (e) => {
+    setTitle(e.target.value);
+    setTitleError(false);
+  };
+
   return showAddModal ? (
     <Modal>
       <StyledModalContainer>
@@ -91,13 +102,7 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
         <div>
           <label>Title</label>
           <br />
-          <Textbox
-            onChange={(e) => {
-              setTitle(e.target.value);
-              setTitleError(false);
-            }}
-            isError={titleError}
-          />
+          <Textbox onChange={onChangeTitle} isError={titleError} />
         </div>
         <div>
           <label>Description</label>
@@ -138,14 +143,7 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
         <Button onClick={() => createNewTask()} theme={theme}>
           Create Task
         </Button>
-        <StyledCloseModal
-          onClick={() => {
-            setShowAddModal(false);
-            resetSubtask();
-          }}
-        >
-          X
-        </StyledCloseModal>
+        <StyledCloseModal onClick={closeModal}>X</StyledCloseModal>
       </StyledModalContainer>
     </Modal>
   ) : null;

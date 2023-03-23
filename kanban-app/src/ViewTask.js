@@ -40,11 +40,21 @@ const StyledEllipsisContainer = styled.div`
 
 const StyledEllipsisModal = styled.div`
   position: absolute;
-  zindex: 10;
-  right: 1px;
-  background-color: #635fc7;
-  color: white;
+  z-index: 10;
+  left: 1px;
   padding: 20px;
+  width: max-content;
+  background: white;
+  border-radius: 15px;
+`;
+
+const StyledEditTask = styled.div`
+  color: #635fc7;
+`;
+
+const StyledDeleteTask = styled.div`
+  color: #ea5555;
+  margin-bottom: 10px;
 `;
 
 const ViewTask = ({
@@ -84,10 +94,10 @@ const ViewTask = ({
           <EllipsisSvg />
           {showEllipsisModal ? (
             <StyledEllipsisModal>
-              <div onClick={deleteTask} style={{ marginBottom: "10px" }}>
+              <StyledDeleteTask onClick={deleteTask}>
                 Delete Task
-              </div>
-              <div onClick={editTask}>Edit Task</div>
+              </StyledDeleteTask>
+              <StyledEditTask onClick={editTask}>Edit Task</StyledEditTask>
             </StyledEllipsisModal>
           ) : null}
         </StyledEllipsisContainer>
