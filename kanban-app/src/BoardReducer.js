@@ -75,12 +75,9 @@ export const BoardReducer = (state = initialState, action) => {
     case "DELETE_BOARD":
       const { data: boardData, selectedBoardIndex: currentBoardIndex } = state;
 
-      const newBoardsList = boardData.boards.filter((ele, i) => {
-        if (i === currentBoardIndex) {
-          return false;
-        }
-        return true;
-      });
+      const newBoardsList = boardData.boards.filter(
+        (ele, i) => i !== currentBoardIndex
+      );
 
       return {
         ...state,
@@ -89,7 +86,7 @@ export const BoardReducer = (state = initialState, action) => {
         },
         selectedBoard: newBoardsList[0],
       };
-      return;
+
     case "DELETE_TASK":
       const {
         selectedTaskIndex: taskIndex,
@@ -143,6 +140,9 @@ export const BoardReducer = (state = initialState, action) => {
         newColumn,
         selectedTaskObj,
       } = payload;
+      if (newColumn === "") {
+        return state;
+      }
       const appState = JSON.parse(localStorage.getItem("appState"));
       const newState = appState?.selectedBoard?.columns?.map((col, i) => {
         if (col.name === selectedColumn.name) {

@@ -61,7 +61,7 @@ const EditBoard = ({ editBoardModal, setEditBoardModal }) => {
           <label>Columns</label>
           {columns.map((col, i) => {
             return (
-              <div key={i}>
+              <div key={col.name}>
                 <span>
                   <Textbox value={col.name} readOnly />
                 </span>
