@@ -62,19 +62,25 @@ const EditTask = ({
       selectedTaskObj: selectedTask,
     });
     closeModal();
-    localStorage.setItem("appState", JSON.stringify(state));
   };
   return showEditModal ? (
     <Modal>
       <StyledContainer>
         <StyledCloseButton onClick={closeModal}>X</StyledCloseButton>
-        <div style={{ marginBottom: "10px" }}>{selectedTask.title}</div>
+        <div style={{ marginBottom: "10px" }}>
+          <Textbox
+            value={selectedTask.title}
+            onChange={(e) =>
+              setCurrentTask({ ...selectedTask, title: e.target.value })
+            }
+          />
+        </div>
         <div style={{ marginBottom: "10px" }}>{selectedTask.description}</div>
         <div>
           <div>Subtasks</div>
           {selectedTask?.subtasks?.map((ele, index) => {
             return (
-              <StyledTextboxContainer>
+              <StyledTextboxContainer key={ele.title}>
                 <span>
                   <Textbox value={ele.title} />
                 </span>

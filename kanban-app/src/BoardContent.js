@@ -135,7 +135,6 @@ const BoardContent = () => {
       selectedBoardName: selectedBoard.name,
       selectedColumn: column,
     });
-    localStorage.setItem("appState", JSON.stringify(state));
     setShowModal(false);
   };
 
@@ -168,7 +167,6 @@ const BoardContent = () => {
       selectedTaskObj: selectedTask,
       newColumn: destination.droppableId,
     });
-    localStorage.setItem("appState", JSON.stringify(state));
     setSelectedTask({});
     setSelectedColumn({});
   };
@@ -187,7 +185,7 @@ const BoardContent = () => {
         <StyledTaskTile theme={theme}>
           {selectedBoard?.columns?.map((column, i) => {
             return (
-              <Droppable droppableId={column.name} index={i}>
+              <Droppable droppableId={column.name} index={i} key={column.name}>
                 {(provided, snapshot) => (
                   <StyledColumnContainer
                     key={column.name}

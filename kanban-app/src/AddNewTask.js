@@ -116,7 +116,7 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
           <label>Subtasks</label>
           {subtasks.map((ele, i) => {
             return (
-              <div>
+              <div key={ele.title}>
                 {ele.title ? (
                   <Textbox value={ele.title} />
                 ) : (

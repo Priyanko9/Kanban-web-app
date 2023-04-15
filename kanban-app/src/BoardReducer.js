@@ -59,10 +59,7 @@ export const BoardReducer = (state = initialState, action) => {
         data: { boards },
       } = state;
       const { selectedBoard } = payload;
-      const savedData = JSON.parse(localStorage.getItem("appState"));
-      if (!savedData) {
-        localStorage.setItem("appState", JSON.stringify(state));
-      }
+
       const selectedBoardString = `${selectedBoard}`;
       return {
         ...state,
@@ -93,27 +90,24 @@ export const BoardReducer = (state = initialState, action) => {
         selectedBoardName: boardName,
         selectedColumn: currentColumn,
       } = payload;
-      const appLocalState = JSON.parse(localStorage.getItem("appState"));
-
-      const newLocalState = appLocalState?.selectedBoard?.columns?.map(
-        (col, i) => {
-          if (col.name === currentColumn.name) {
-            col.tasks.splice(taskIndex, 1);
-            return col;
-          }
+      const newLocalState = state?.selectedBoard?.columns?.map((col, i) => {
+        if (col.name === currentColumn.name) {
+          col.tasks.splice(taskIndex, 1);
           return col;
         }
-      );
-      const { data: { boards: boardsDataList } = {} } = appLocalState;
+        return col;
+      });
+      const { data: { boards: boardsDataList } = {} } = state;
       const resultList = boardsDataList?.map((board, i) => {
         if (board.name === boardName) {
           board.columns = newLocalState;
         }
         return board;
       });
-      appLocalState.data.boards = resultList;
+      const newClonedState = { ...state };
+      newClonedState.data.boards = resultList;
 
-      return { ...appLocalState };
+      return { ...newClonedState };
     case "EDIT_BOARD":
       const { data: currentData, selectedBoardIndex: presentBoardIndex } =
         state;
@@ -140,32 +134,33 @@ export const BoardReducer = (state = initialState, action) => {
         newColumn,
         selectedTaskObj,
       } = payload;
-      if (newColumn === "") {
-        return state;
+
+      if (newColumn !== "") {
+        const newState = state?.selectedBoard?.columns?.map((col, i) => {
+          if (col.name === selectedColumn.name) {
+            col.tasks.splice(selectedTaskIndex, 1);
+            return col;
+          }
+          if (col.name === newColumn) {
+            col.tasks = col.tasks.concat([selectedTaskObj]);
+            return col;
+          }
+          return col;
+        });
+        const {
+          data: { boards: boardsData },
+        } = state;
+        const result = boardsData?.map((board, i) => {
+          if (board.name === selectedBoardName) {
+            board.columns = newState;
+          }
+          return board;
+        });
+        const clonedState = { ...state };
+        clonedState.data.boards = result;
+        return clonedState;
       }
-      const appState = JSON.parse(localStorage.getItem("appState"));
-      const newState = appState?.selectedBoard?.columns?.map((col, i) => {
-        if (col.name === selectedColumn.name) {
-          col.tasks.splice(selectedTaskIndex, 1);
-          return col;
-        }
-        if (col.name === newColumn) {
-          col.tasks = col.tasks.concat([selectedTaskObj]);
-          return col;
-        }
-        return col;
-      });
-      const {
-        data: { boards: boardsData },
-      } = appState;
-      const result = boardsData?.map((board, i) => {
-        if (board.name === selectedBoardName) {
-          board.columns = newState;
-        }
-        return board;
-      });
-      appState.data.boards = result;
-      return { ...appState };
+      return state;
     default:
       return state;
   }
