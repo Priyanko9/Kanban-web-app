@@ -75,7 +75,17 @@ const EditTask = ({
             }
           />
         </div>
-        <div style={{ marginBottom: "10px" }}>{selectedTask.description}</div>
+        {selectedTask.description && (
+          <div style={{ marginBottom: "10px" }}>
+            <textarea
+              style={{ marginBottom: "10px", width: "300px", height: "100px" }}
+              value={selectedTask.description}
+              onChange={(e) =>
+                setCurrentTask({ ...selectedTask, description: e.target.value })
+              }
+            />
+          </div>
+        )}
         <div>
           <div>Subtasks</div>
           {selectedTask?.subtasks?.map((ele, index) => {
