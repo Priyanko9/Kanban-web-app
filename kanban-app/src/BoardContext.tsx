@@ -22,7 +22,7 @@ interface EditPayload {
   selectedTaskIndex:number;
   selectedBoardName:string;
   selectedColumn:Column;
-  newColumn:Column;
+  newColumn:string;
   selectedTaskObj:Task;
 }
 
@@ -37,7 +37,7 @@ export const BoardContext = createContext<BoardCtx | null>(null);
 export const BoardProvider = ({ children }:Props) => {
   const [state, dispatch] = useReducer(BoardReducer, initialState);
 
-  const fetchBoard = (selectedBoard: Board) => {
+  const fetchBoard = (selectedBoard: number|null) => {
     dispatch({
       type: "FETCH_BOARD_DATA",
       payload: {
@@ -76,7 +76,6 @@ export const BoardProvider = ({ children }:Props) => {
         selectedTaskIndex,
         selectedBoardName,
         selectedColumn,
-        deleteFlag: false,
       },
     });
   };

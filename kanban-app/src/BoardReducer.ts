@@ -54,9 +54,7 @@ interface EditTaskAction {
 
 interface DeleteBoardAction {
   type: "DELETE_BOARD";
-  payload: {
-    // Define payload properties here if needed
-  };
+  payload?: {};
 }
 
 interface DeleteTaskAction {
