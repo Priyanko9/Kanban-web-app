@@ -1,12 +1,83 @@
 import { backendData } from "./data";
+import { BackendData, Board, Task, Column } from "./types";
 
-export const initialState = {
+interface State {
+  selectedBoardIndex: number;
+  data: BackendData;
+  selectedBoard: Board | null;
+}
+
+export const initialState: State = {
   selectedBoardIndex: 0,
   data: backendData,
   selectedBoard: backendData.boards[0],
 };
 
-export const BoardReducer = (state = initialState, action) => {
+interface CreateNewBoardAction {
+  type: "CREATE_NEW_BOARD";
+  payload: {
+    newBoard: Board;
+  };
+}
+
+interface CreateNewTaskAction {
+  type: "CREATE_NEW_TASK";
+  payload: {
+    newTask: Task;
+  };
+}
+
+interface FetchBoardDataAction {
+  type: "FETCH_BOARD_DATA";
+  payload: {
+    selectedBoard: number | null;
+  };
+}
+
+interface EditBoardAction {
+  type: "EDIT_BOARD";
+  payload: {
+    editedBoard: Board;
+  };
+}
+
+interface EditTaskAction {
+  type: "EDIT_TASK";
+  payload: {
+    selectedTaskIndex: number;
+    selectedBoardName: string;
+    selectedColumn: Column;
+    newColumn: string;
+    selectedTaskObj: Task;
+  };
+}
+
+interface DeleteBoardAction {
+  type: "DELETE_BOARD";
+  payload: {
+    // Define payload properties here if needed
+  };
+}
+
+interface DeleteTaskAction {
+  type: "DELETE_TASK";
+  payload: {
+    selectedTaskIndex: number;
+    selectedBoardName: string;
+    selectedColumn: Column;
+  };
+}
+
+type Action =
+  | CreateNewBoardAction
+  | CreateNewTaskAction
+  | FetchBoardDataAction
+  | EditBoardAction
+  | EditTaskAction
+  | DeleteBoardAction
+  | DeleteTaskAction;
+
+export const BoardReducer = (state = initialState, action: Action) => {
   const { payload, type } = action;
   switch (type) {
     case "CREATE_NEW_BOARD":
@@ -27,6 +98,9 @@ export const BoardReducer = (state = initialState, action) => {
         data: { boards: currentBoards },
       } = state;
       const { newTask } = payload;
+      if (!currentBoard || !currentBoard.columns) {
+        return state;
+      }
       const newTasksList = currentBoard?.columns[0]?.tasks.concat([newTask]);
 
       const newStateObj = {
@@ -60,6 +134,9 @@ export const BoardReducer = (state = initialState, action) => {
       } = state;
       const { selectedBoard } = payload;
 
+      if (!selectedBoard) {
+        return state;
+      }
       const selectedBoardString = `${selectedBoard}`;
       return {
         ...state,
@@ -90,24 +167,26 @@ export const BoardReducer = (state = initialState, action) => {
         selectedBoardName: boardName,
         selectedColumn: currentColumn,
       } = payload;
-      const newLocalState = state?.selectedBoard?.columns?.map((col, i) => {
-        if (col.name === currentColumn.name) {
-          col.tasks.splice(taskIndex, 1);
+      const newLocalState: Column[] | undefined =
+        state?.selectedBoard?.columns?.map((col, i) => {
+          if (col.name === currentColumn.name) {
+            col.tasks.splice(taskIndex, 1);
+            return col;
+          }
           return col;
-        }
-        return col;
-      });
+        });
       const { data: { boards: boardsDataList } = {} } = state;
       const resultList = boardsDataList?.map((board, i) => {
         if (board.name === boardName) {
-          board.columns = newLocalState;
+          return { ...board, columns: newLocalState };
         }
         return board;
       });
-      const newClonedState = { ...state };
-      newClonedState.data.boards = resultList;
+      const newClonedState: State = { ...state };
+      newClonedState.data.boards = resultList || [];
 
       return { ...newClonedState };
+
     case "EDIT_BOARD":
       const { data: currentData, selectedBoardIndex: presentBoardIndex } =
         state;

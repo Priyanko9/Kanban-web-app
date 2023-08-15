@@ -5,8 +5,9 @@ import { ThemeContext } from "./App";
 import { BoardContext } from "./BoardContext";
 import ViewTask from "./ViewTask";
 import EditTask from "./EditTask";
+import {Subtask} from "./types";
 
-const getBgColor = (name) => {
+const getBgColor = (name:string) => {
   if (name === "Todo") {
     return "#49c4e5";
   } else if (name === "Doing") {
@@ -39,7 +40,10 @@ const StyledColumnName = styled.div`
   align-items: center;
 `;
 
-const StyledSignal = styled.div`
+interface SignalProps{
+  name: string;
+}
+const StyledSignal = styled.div<SignalProps>`
   width: 10px;
   height: 10px;
   border-radius: 25px;
@@ -47,7 +51,12 @@ const StyledSignal = styled.div`
   margin-right: 5px;
 `;
 
-const StyledColumnContainer = styled.div`
+interface ColumnContainer{
+  snapshot :{
+    isDraggingOver:boolean
+  }
+}
+const StyledColumnContainer = styled.div<ColumnContainer>`
   margin-left: 10px;
   width: 33%;
   padding-left: 10px;
@@ -69,7 +78,7 @@ const StyledEdit = styled.div`
   margin-top: 10px;
 `;
 
-const calculateCompletedSubtask = (subtasks) => {
+const calculateCompletedSubtask = (subtasks:Subtask[]) => {
   let count = 0;
   subtasks.forEach((subtask) => {
     if (subtask.isCompleted) {
