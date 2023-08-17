@@ -5,7 +5,7 @@ import { ThemeContext } from "./App";
 import { BoardContext } from "./BoardContext";
 import ViewTask from "./ViewTask";
 import EditTask from "./EditTask";
-import {Subtask} from "./types";
+import {Task,Column,Board,Subtask} from "./types";
 
 const getBgColor = (name:string) => {
   if (name === "Todo") {
@@ -89,96 +89,109 @@ const calculateCompletedSubtask = (subtasks:Subtask[]) => {
 };
 
 const BoardContent = () => {
-  const { theme } = useContext(ThemeContext);
+  const ThemeContextValue = useContext(ThemeContext);
+ 
   const contextValue = useContext(BoardContext);
-  const { state, editTask, deleteTask } = contextValue;
+  
+  
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState({});
   const [editData, setEditData] = useState({});
   const [selectedColumn, setSelectedColumn] = useState({});
-  const [taskIndex, setTaskIndex] = useState(null);
+  const [taskIndex, setTaskIndex] = useState(0);
 
-  const { selectedBoard } = state || {};
+  const calculateCompletedSubtaskCallback = useCallback((subtasks:Subtask[]) => {
+    calculateCompletedSubtask(subtasks);
+  }, []);
+  if(contextValue !==null && ThemeContextValue!==null){
+    const { state, editTask, deleteTask } = contextValue;
+    const { selectedBoard } = state || {};
+   
 
-  const calculateStatusArray = () => {
-    const statusList = [];
-    selectedBoard?.columns.forEach((column, i) => {
-      statusList.push(column.name);
-    });
-    return statusList;
-  };
-  const onTaskClick = (task, column, index) => {
-    setShowModal(true);
-    setSelectedTask(task);
-    setSelectedColumn(column);
-    setTaskIndex(index);
-  };
-  const mouseDown = (task, column) => {
-    setSelectedTask(task);
-    setSelectedColumn(column);
-  };
-  const onTaskEdit = ({
-    selectedTaskIndex,
-    selectedBoardName,
-    selectedColumn,
-    selectedTaskObj,
-  }) => {
-    setShowEditModal(true);
-
-    setEditData({
+    const calculateStatusArray = () => {
+      const statusList:Array<string> = [];
+      selectedBoard?.columns?.forEach((column, i) => {
+        statusList.push(column.name);
+      });
+      return statusList;
+    };
+    const onTaskClick = (task:Task, column:Column, index:number) => {
+      setShowModal(true);
+      setSelectedTask(task);
+      setSelectedColumn(column);
+      setTaskIndex(index);
+    };
+    const mouseDown = (task:Task, column:Column) => {
+      setSelectedTask(task);
+      setSelectedColumn(column);
+    };
+    
+    const onTaskEdit = ({
       selectedTaskIndex,
       selectedBoardName,
       selectedColumn,
       selectedTaskObj,
-    });
-  };
-  const calculateCompletedSubtaskCallback = useCallback((subtasks) => {
-    calculateCompletedSubtask(subtasks);
-  }, []);
+    }:{
+      selectedTaskIndex: number;
+      selectedBoardName:string;
+      selectedColumn:Column;
+      selectedTaskObj:Task;
+    }) => {
+      setShowEditModal(true);
 
-  const deleteTaskFunc = (e, index, column) => {
-    e.stopPropagation();
-    deleteTask({
-      selectedTaskIndex: index,
-      selectedBoardName: selectedBoard.name,
-      selectedColumn: column,
-    });
-    setShowModal(false);
-  };
+      setEditData({
+        selectedTaskIndex,
+        selectedBoardName,
+        selectedColumn,
+        selectedTaskObj,
+      });
+    };
+    
 
-  const editTaskFunc = (e, index, column, task) => {
-    e.stopPropagation();
-    setSelectedTask(task);
-    onTaskEdit({
-      selectedTaskIndex: index,
-      selectedBoardName: selectedBoard.name,
-      selectedColumn: column,
-      selectedTaskObj: task,
-    });
-    setShowModal(false);
-  };
+    const deleteTaskFunc = (e:React.MouseEvent<HTMLButtonElement>, index:number, column:Column) => {
+      e.stopPropagation();
+      deleteTask({
+        selectedTaskIndex: index,
+        selectedBoardName: selectedBoard?.name,
+        selectedColumn: column,
+      });
+      setShowModal(false);
+    };
 
-  const dragEnd = (result) => {
-    const { destination, source } = result;
+    const editTaskFunc = (e, index, column, task) => {
+      e.stopPropagation();
+      setSelectedTask(task);
+      onTaskEdit({
+        selectedTaskIndex: index,
+        selectedBoardName: selectedBoard?.name,
+        selectedColumn: column,
+        selectedTaskObj: task,
+      });
+      setShowModal(false);
+    };
 
-    if (!destination) {
-      return;
-    }
+    const dragEnd = (result) => {
+      const { destination, source } = result;
 
-    if (destination.droppableId === source.droppableId) {
-      return;
-    }
-    editTask({
-      selectedTaskIndex: Number(source.index),
-      selectedBoardName: selectedBoard.name,
-      selectedColumn: selectedColumn,
-      selectedTaskObj: selectedTask,
-      newColumn: destination.droppableId,
-    });
-    setSelectedTask({});
-    setSelectedColumn({});
-  };
+      if (!destination) {
+        return;
+      }
+
+      if (destination.droppableId === source.droppableId) {
+        return;
+      }
+      editTask({
+        selectedTaskIndex: Number(source.index),
+        selectedBoardName: selectedBoard.name,
+        selectedColumn: selectedColumn,
+        selectedTaskObj: selectedTask,
+        newColumn: destination.droppableId,
+      });
+      setSelectedTask({});
+      setSelectedColumn({});
+    };
+  
 
   if (selectedBoard?.columns.length === 0) {
     return (
@@ -188,6 +201,7 @@ const BoardContent = () => {
       </div>
     );
   }
+  const {theme}=ThemeContextValue;
   return (
     <div>
       <DragDropContext onDragEnd={dragEnd}>
@@ -269,6 +283,7 @@ const BoardContent = () => {
       />
     </div>
   );
+        }
 };
 
 export default BoardContent;

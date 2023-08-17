@@ -5,7 +5,13 @@ import Dashboard from "./Dashboard";
 import Theme from "./Theme";
 import { BoardProvider } from "./BoardContext";
 
-export const ThemeContext = createContext();
+interface ThemeContextType {
+  currentTheme: string;
+  setCurrentTheme:Function;
+  theme:typeof Theme;
+}
+
+export const ThemeContext = createContext<ThemeContextType| null>(null);
 
 function App() {
   const [currentTheme, setCurrentTheme] = useState("lightTheme");
