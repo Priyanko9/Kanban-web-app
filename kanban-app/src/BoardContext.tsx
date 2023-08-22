@@ -2,11 +2,23 @@ import  { createContext, useReducer,ReactNode, useMemo } from "react";
 import { BoardReducer, initialState } from "./BoardReducer";
 import {Task,Column,Board} from "./types";
 
+interface EditPayload {
+  selectedTaskIndex:number;
+  selectedBoardName:string;
+  selectedColumn:Column|null;
+  newColumn:string;
+  selectedTaskObj:Task|null;
+}
 
+interface DeletePayload {
+  selectedTaskIndex:number;
+  selectedBoardName:string;
+  selectedColumn:Column;
+}
 interface BoardCtx {
   fetchBoard: Function;
   state: typeof initialState;
-  editTask: Function;
+  editTask: (payload:EditPayload)=>void;
   deleteTask: Function;
   addNewTask: Function;
   createNewBoard: Function;
@@ -18,19 +30,7 @@ interface Props {
   children?: ReactNode;
 }
 
-interface EditPayload {
-  selectedTaskIndex:number;
-  selectedBoardName:string;
-  selectedColumn:Column;
-  newColumn:string;
-  selectedTaskObj:Task;
-}
 
-interface DeletePayload {
-  selectedTaskIndex:number;
-  selectedBoardName:string;
-  selectedColumn:Column;
-}
 
 export const BoardContext = createContext<BoardCtx | null>(null);
 

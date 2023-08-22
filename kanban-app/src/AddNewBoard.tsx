@@ -5,6 +5,7 @@ import Modal from "./Modal";
 import { ThemeContext } from "./App";
 import Textbox from "./Atoms/Input";
 import Button from "./Atoms/Button";
+import { Column } from "./types";
 
 const StyledContainer = styled.div`
   background-color: white;
@@ -24,7 +25,7 @@ const StyledCloseModal = styled.div`
 `;
 
 const AddNewBoard = ({ addBoardModal, setAddBoardModal }) => {
-  const [columns, setColumns] = useState([]);
+  const [columns, setColumns] = useState<Column[]>([]);
   const [boardName, setBoardName] = useState("");
   const contextValue = useContext(BoardContext);
   const { createNewBoard } = contextValue;

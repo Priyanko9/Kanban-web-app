@@ -74,11 +74,16 @@ const Dashboard = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteBoardModal, setShowDeleteBoardModal] = useState(false);
   const [showEllipsisModal, setShowEllipsisModal] = useState(false);
+  const boardCtx=useContext(BoardContext);
+  const themeCtx=useContext(ThemeContext);
+  if(boardCtx!=null && themeCtx!=null) {
+  
   const {
     state: { selectedBoard },
-  } = useContext(BoardContext);
+  } = boardCtx
 
-  const { theme } = useContext(ThemeContext);
+
+  const { theme } = themeCtx
 
   return (
     <StyledContainer>
@@ -128,6 +133,7 @@ const Dashboard = () => {
       />
     </StyledContainer>
   );
+  }
 };
 
 export default Dashboard;

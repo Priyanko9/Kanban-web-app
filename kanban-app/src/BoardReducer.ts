@@ -4,7 +4,7 @@ import { BackendData, Board, Task, Column } from "./types";
 interface State {
   selectedBoardIndex: number;
   data: BackendData;
-  selectedBoard: Board | null;
+  selectedBoard: Board;
 }
 
 export const initialState: State = {
@@ -46,9 +46,9 @@ interface EditTaskAction {
   payload: {
     selectedTaskIndex: number;
     selectedBoardName: string;
-    selectedColumn: Column;
+    selectedColumn: Column | null;
     newColumn: string;
-    selectedTaskObj: Task;
+    selectedTaskObj: Task | null;
   };
 }
 
@@ -213,16 +213,18 @@ export const BoardReducer = (state = initialState, action: Action) => {
       } = payload;
 
       const newState = state?.selectedBoard?.columns?.map((col, i) => {
-        if (col.name === selectedColumn.name && newColumn !== "") {
+        if (col.name === selectedColumn?.name && newColumn !== "") {
           col.tasks.splice(selectedTaskIndex, 1);
           return col;
         }
         if (col.name === newColumn) {
-          col.tasks = col.tasks.concat([selectedTaskObj]);
+          if (selectedTaskObj !== null)
+            col.tasks = col.tasks.concat([selectedTaskObj]);
           return col;
         }
-        if (col.name === selectedColumn.name) {
-          col.tasks.splice(selectedTaskIndex, 1, selectedTaskObj);
+        if (col.name === selectedColumn?.name) {
+          if (selectedTaskObj !== null)
+            col.tasks.splice(selectedTaskIndex, 1, selectedTaskObj);
           return col;
         }
         return col;
