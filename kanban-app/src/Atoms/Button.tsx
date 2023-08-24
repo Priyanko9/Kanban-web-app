@@ -1,7 +1,13 @@
 import React from 'react';
 import styled from "styled-components";
 
-const StyledButton = styled.button`
+interface StyledButtonProps {
+  isSecondary?: boolean;
+  isDestructive?: boolean;
+  children: React.ReactNode;
+}
+
+const StyledButton = styled.button<StyledButtonProps>`
   width: 100%;
   background: ${(props) =>
     props.isSecondary
@@ -32,8 +38,8 @@ const StyledButton = styled.button`
   margin-left: 5px;
 `;
 
-const Button = (props) => {
-  const { children } = props;
+const Button = (props:StyledButtonProps) => {
+  const {children} = props;
   return <StyledButton {...props}>{children}</StyledButton>;
 };
 

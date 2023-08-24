@@ -1,7 +1,11 @@
-import React from "react";
+import React,{FC,InputHTMLAttributes} from "react";
 import styled from "styled-components";
 
-const StyledTextbox = styled.input`
+interface StyledTextboxProps extends InputHTMLAttributes<HTMLInputElement>{
+  isError: boolean;
+}
+
+const StyledTextbox = styled.input<StyledTextboxProps>`
   width: 90%;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -15,7 +19,7 @@ const StyledLabel = styled.label`
   position: relative;
 `;
 
-const Textbox = (props) => {
+const Textbox:FC<StyledTextboxProps> = (props) => {
   return (
     <>
       <StyledLabel>

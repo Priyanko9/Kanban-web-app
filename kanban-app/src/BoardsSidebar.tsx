@@ -59,7 +59,7 @@ const BoardsSidebar = () => {
       </StyledKanbanLogo>
       <div style={{ marginTop: "20px" }}>
         <StyledAllBoards>All Boards ({boards?.length})</StyledAllBoards>
-        {boards &&
+        {boards ?
           boards.map((board, index) => {
             return (
               <StyledBoardContainer
@@ -74,7 +74,7 @@ const BoardsSidebar = () => {
                 <StyledBoardName>{board.name}</StyledBoardName>
               </StyledBoardContainer>
             );
-          })}
+          }):null}
         <StyledBoardContainer theme={theme}>
           <span>
             <BoardSvg />
