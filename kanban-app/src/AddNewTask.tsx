@@ -21,20 +21,30 @@ const StyledCloseModal = styled.div`
   cursor: pointer;
 `;
 
-const AddNewTask = ({ setShowAddModal, showAddModal }) => {
-  const { addNewTask } = useContext(BoardContext);
+type AddNewTaskProps = {
+  showAddModal: boolean;
+  setShowAddModal: (s: boolean) => void;
+};
+
+const AddNewTask: React.FC<AddNewTaskProps> = ({
+  setShowAddModal,
+  showAddModal,
+}) => {
+  const boardContext = useContext(BoardContext);
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState(false);
   const [description, setDescription] = useState("");
-  const [subtasks, setSubtasks] = useState([{ title: "", isCompleted: false }]);
-  const { theme } = useContext(ThemeContext);
+  const [subtasks, setSubtasks] = useState([
+    { title: "", isCompleted: false, isError: false },
+  ]);
+  const themeContext = useContext(ThemeContext);
 
-  const addSubtaskName = (name) => {
+  const addSubtaskName = (name: string) => {
     subtasks[subtasks.length - 1].title = name;
   };
 
   const addNewSubtask = () => {
-    subtasks.push({ title: "", isCompleted: false });
+    subtasks.push({ title: "", isCompleted: false, isError: false });
     setSubtasks([...subtasks]);
   };
 
@@ -64,7 +74,7 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
   };
 
   const resetSubtask = () => {
-    setSubtasks([{ title: "", isCompleted: false }]);
+    setSubtasks([{ title: "", isCompleted: false, isError: false }]);
   };
 
   const closeModal = () => {
@@ -73,7 +83,8 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
   };
 
   const createNewTask = () => {
-    if (!checkError()) {
+    if (!checkError() && boardContext !== null) {
+      const { addNewTask } = boardContext;
       addNewTask({
         title,
         description,
@@ -85,68 +96,72 @@ const AddNewTask = ({ setShowAddModal, showAddModal }) => {
     }
   };
 
-  const removeSubtask = (index) => {
+  const removeSubtask = (index: number) => {
     subtasks.splice(index, 1);
     setSubtasks([...subtasks]);
   };
 
-  const onChangeTitle = (e) => {
+  const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
     setTitleError(false);
   };
 
-  return showAddModal ? (
-    <Modal>
-      <StyledModalContainer>
-        <h2>Add New Task</h2>
-        <div>
-          <label>Title</label>
-          <br />
-          <Textbox onChange={onChangeTitle} isError={titleError} />
-        </div>
-        <div>
-          <label>Description</label>
-          <br />
-          <textarea
-            onChange={(e) => setDescription(e.target.value)}
-            style={{ width: "500px", height: "100px" }}
-          />
-        </div>
-        <div>
-          <label>Subtasks</label>
-          {subtasks.map((ele, i) => {
-            return (
-              <div key={ele.title}>
-                {ele.title ? (
-                  <Textbox value={ele.title} />
-                ) : (
-                  <Textbox
-                    onChange={(e) => addSubtaskName(e.target.value)}
-                    isError={ele.isError}
-                  />
-                )}
+  if (themeContext != null) {
+    const { theme } = themeContext;
 
-                <span onClick={() => removeSubtask(i)}>X</span>
-              </div>
-            );
-          })}
-          <Button onClick={addNewSubtask} theme={theme} isSecondary>
-            Create New Subtask
-          </Button>
-        </div>
-        <div>
-          <div>Status</div>
+    return showAddModal ? (
+      <Modal>
+        <StyledModalContainer>
+          <h2>Add New Task</h2>
           <div>
-            <SelectBox defaultValue="Todo" defaultName="Todo" />
+            <label>Title</label>
+            <br />
+            <Textbox onChange={onChangeTitle} isError={titleError} />
           </div>
-        </div>
-        <Button onClick={() => createNewTask()} theme={theme}>
-          Create Task
-        </Button>
-        <StyledCloseModal onClick={closeModal}>X</StyledCloseModal>
-      </StyledModalContainer>
-    </Modal>
-  ) : null;
+          <div>
+            <label>Description</label>
+            <br />
+            <textarea
+              onChange={(e) => setDescription(e.target.value)}
+              style={{ width: "500px", height: "100px" }}
+            />
+          </div>
+          <div>
+            <label>Subtasks</label>
+            {subtasks.map((ele, i) => {
+              return (
+                <div key={ele.title}>
+                  {ele.title ? (
+                    <Textbox value={ele.title} />
+                  ) : (
+                    <Textbox
+                      onChange={(e) => addSubtaskName(e.target.value)}
+                      isError={ele.isError}
+                    />
+                  )}
+
+                  <span onClick={() => removeSubtask(i)}>X</span>
+                </div>
+              );
+            })}
+            <Button onClick={addNewSubtask} theme={theme} isSecondary>
+              Create New Subtask
+            </Button>
+          </div>
+          <div>
+            <div>Status</div>
+            <div>
+              <SelectBox defaultValue="Todo" defaultName="Todo" />
+            </div>
+          </div>
+          <Button onClick={() => createNewTask()} theme={theme}>
+            Create Task
+          </Button>
+          <StyledCloseModal onClick={closeModal}>X</StyledCloseModal>
+        </StyledModalContainer>
+      </Modal>
+    ) : null;
+  }
 };
 
 export default AddNewTask;

@@ -1,4 +1,4 @@
-import React,{} from 'react';
+import React from "react";
 import styled from "styled-components";
 
 const StyledSelect = styled.select`
@@ -9,12 +9,11 @@ const StyledSelect = styled.select`
 interface SelectBoxProps {
   defaultValue: string;
   defaultName: string;
-  optionList: string[];
-  onChange: React.ChangeEventHandler<HTMLSelectElement>;
- 
+  optionList?: string[];
+  onChange?: React.ChangeEventHandler<HTMLSelectElement>;
 }
 
-const SelectBox:React.FC<SelectBoxProps> = ({
+const SelectBox: React.FC<SelectBoxProps> = ({
   defaultValue,
   defaultName,
   optionList,

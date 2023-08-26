@@ -1,6 +1,7 @@
 export interface Subtask {
   title: string;
   isCompleted: boolean;
+  isError?: boolean;
 }
 
 export interface Task {

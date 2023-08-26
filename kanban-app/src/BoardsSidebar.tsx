@@ -7,8 +7,13 @@ import { backendData } from "./data";
 import { ThemeContext } from "./App";
 import { BoardContext } from "./BoardContext";
 import AddNewBoard from "./AddNewBoard";
+import { Board } from "./types";
 
-const StyledBoardContainer = styled.div`
+type StyledBoardContainerProps = {
+  selected?: boolean;
+};
+
+const StyledBoardContainer = styled.div<StyledBoardContainerProps>`
   width: 276px;
   height: 48px;
   background: ${(props) =>
@@ -39,58 +44,66 @@ const StyledAllBoards = styled.div`
   justify-content: center;
 `;
 
-const BoardsSidebar = () => {
+const BoardsSidebar: React.FC = () => {
   const [selectedBoard, setSelectedBoard] = useState(0);
-  const { theme } = useContext(ThemeContext);
-  const { fetchBoard, state } = useContext(BoardContext);
-  const {
-    data: { boards },
-  } = state || [];
   const [addBoardModal, setAddBoardModal] = useState(false);
+  const themeContext = useContext(ThemeContext);
+  const boardContext = useContext(BoardContext);
 
-  const selectBoard = (index) => {
-    fetchBoard(index);
-    setSelectedBoard(index);
-  };
-  return (
-    <div>
-      <StyledKanbanLogo>
-        <KanbanSvg />
-      </StyledKanbanLogo>
-      <div style={{ marginTop: "20px" }}>
-        <StyledAllBoards>All Boards ({boards?.length})</StyledAllBoards>
-        {boards ?
-          boards.map((board, index) => {
-            return (
-              <StyledBoardContainer
-                key={index}
-                selected={selectedBoard === index}
-                theme={theme}
-                onClick={() => selectBoard(index)}
-              >
-                <span>
-                  <BoardSvg />
-                </span>
-                <StyledBoardName>{board.name}</StyledBoardName>
-              </StyledBoardContainer>
-            );
-          }):null}
-        <StyledBoardContainer theme={theme}>
-          <span>
-            <BoardSvg />
-          </span>
-          <StyledBoardName onClick={() => setAddBoardModal(true)}>
-            + Create New Board
-          </StyledBoardName>
-        </StyledBoardContainer>
-      </div>
-      <AddNewBoard
-        addBoardModal={addBoardModal}
-        setAddBoardModal={setAddBoardModal}
-      />
-    </div>
-  );
+  if (boardContext != null) {
+    const { fetchBoard, state } = boardContext;
+    const {
+      data: { boards },
+    } = state || [];
 
+    const selectBoard = (index: number) => {
+      fetchBoard(index);
+      setSelectedBoard(index);
+    };
+
+    if (themeContext != null) {
+      const { theme } = themeContext;
+      return (
+        <div>
+          <StyledKanbanLogo>
+            <KanbanSvg />
+          </StyledKanbanLogo>
+          <div style={{ marginTop: "20px" }}>
+            <StyledAllBoards>All Boards ({boards?.length})</StyledAllBoards>
+            {boards
+              ? boards.map((board: Board, index: number) => {
+                  return (
+                    <StyledBoardContainer
+                      key={index}
+                      selected={selectedBoard === index}
+                      theme={theme}
+                      onClick={() => selectBoard(index)}
+                    >
+                      <span>
+                        <BoardSvg />
+                      </span>
+                      <StyledBoardName>{board.name}</StyledBoardName>
+                    </StyledBoardContainer>
+                  );
+                })
+              : null}
+            <StyledBoardContainer theme={theme}>
+              <span>
+                <BoardSvg />
+              </span>
+              <StyledBoardName onClick={() => setAddBoardModal(true)}>
+                + Create New Board
+              </StyledBoardName>
+            </StyledBoardContainer>
+          </div>
+          <AddNewBoard
+            addBoardModal={addBoardModal}
+            setAddBoardModal={setAddBoardModal}
+          />
+        </div>
+      );
+    }
+  }
   //   return <div></div>;
 };
 

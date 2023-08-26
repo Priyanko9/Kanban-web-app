@@ -1,9 +1,11 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components";
-
+import Theme from "../Theme";
 interface StyledButtonProps {
   isSecondary?: boolean;
   isDestructive?: boolean;
+  onClick?: () => void;
+  theme: typeof Theme;
   children: React.ReactNode;
 }
 
@@ -38,8 +40,8 @@ const StyledButton = styled.button<StyledButtonProps>`
   margin-left: 5px;
 `;
 
-const Button = (props:StyledButtonProps) => {
-  const {children} = props;
+const Button = (props: StyledButtonProps) => {
+  const { children } = props;
   return <StyledButton {...props}>{children}</StyledButton>;
 };
 
