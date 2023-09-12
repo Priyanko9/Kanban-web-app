@@ -15,41 +15,47 @@ const StyledButtonContainer = styled.div`
   display: flex;
 `;
 
-const DeleteBoardModal = ({
-  setShowDeleteBoardModal,
-  showDeleteBoardModal,
-}) => {
-  const { deleteBoard: deleteBoardFunc } = useContext(BoardContext);
-  const { theme } = useContext(ThemeContext);
+const DeleteBoardModal: React.FC<{
+  setShowDeleteBoardModal: (args: boolean) => void;
+  showDeleteBoardModal: boolean;
+}> = ({ setShowDeleteBoardModal, showDeleteBoardModal }) => {
+  const boardContext = useContext(BoardContext);
+  const themeCtxt = useContext(ThemeContext);
 
   const deleteBoard = () => {
-    deleteBoardFunc();
+    if (boardContext !== null) {
+      const { deleteBoard: deleteBoardFunc } = boardContext;
+      deleteBoardFunc();
+    }
     setShowDeleteBoardModal(false);
   };
+  if (themeCtxt !== null) {
+    const { theme } = themeCtxt;
 
-  return showDeleteBoardModal ? (
-    <Modal>
-      <StyledContainer>
-        <div>Delete this board ?</div>
-        <div>
-          Are you sure you want to delete this board? This action will remove
-          all columns and tasks and cannot be reversed.
-        </div>
-        <StyledButtonContainer>
-          <Button onClick={() => deleteBoard()} theme={theme} isDestructive>
-            Delete
-          </Button>
-          <Button
-            onClick={() => setShowDeleteBoardModal(false)}
-            theme={theme}
-            isSecondary
-          >
-            Cancel
-          </Button>
-        </StyledButtonContainer>
-      </StyledContainer>
-    </Modal>
-  ) : null;
+    return showDeleteBoardModal ? (
+      <Modal>
+        <StyledContainer>
+          <div>Delete this board ?</div>
+          <div>
+            Are you sure you want to delete this board? This action will remove
+            all columns and tasks and cannot be reversed.
+          </div>
+          <StyledButtonContainer>
+            <Button onClick={() => deleteBoard()} theme={theme} isDestructive>
+              Delete
+            </Button>
+            <Button
+              onClick={() => setShowDeleteBoardModal(false)}
+              theme={theme}
+              isSecondary
+            >
+              Cancel
+            </Button>
+          </StyledButtonContainer>
+        </StyledContainer>
+      </Modal>
+    ) : null;
+  }
 };
 
 export default DeleteBoardModal;
