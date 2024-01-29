@@ -7,8 +7,8 @@ const StyledSelect = styled.select`
 `;
 
 interface SelectBoxProps {
-  defaultValue: string;
-  defaultName: string;
+  defaultValue: string | undefined;
+  defaultName: string | undefined;
   optionList?: string[];
   onChange?: React.ChangeEventHandler<HTMLSelectElement>;
 }

@@ -83,9 +83,9 @@ const StyledEdit = styled.div`
   margin-top: 10px;
 `;
 
-const calculateCompletedSubtask = (subtasks: Subtask[]) => {
+const calculateCompletedSubtask = (subtasks: Subtask[] | undefined) => {
   let count = 0;
-  subtasks.forEach((subtask) => {
+  subtasks?.forEach((subtask) => {
     if (subtask.isCompleted) {
       count++;
     }
@@ -101,12 +101,12 @@ const BoardContent = () => {
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [editData, setEditData] = useState<EditData | null>(null);
+  const [editData, setEditData] = useState<EditData>();
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
   const [taskIndex, setTaskIndex] = useState(0);
 
   const calculateCompletedSubtaskCallback = useCallback(
-    (subtasks: Subtask[]) => {
+    (subtasks: Subtask[] | undefined) => {
       calculateCompletedSubtask(subtasks);
     },
     []

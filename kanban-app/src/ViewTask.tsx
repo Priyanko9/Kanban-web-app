@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import Modal from "./Modal";
 import Checkbox from "./Atoms/Checkbox";
 import SelectBox from "./Atoms/Selectbox";
 import { ReactComponent as EllipsisSvg } from "./assets/icon-vertical-ellipsis.svg";
+import { Column, Subtask, Task } from "./types";
 
 const StyledTaskContainer = styled.div`
   background: white;
@@ -48,16 +49,36 @@ const StyledEllipsisModal = styled.div`
   border-radius: 15px;
 `;
 
-const StyledEditTask = styled.div`
+const StyledEditTask = styled.button`
   color: #635fc7;
 `;
 
-const StyledDeleteTask = styled.div`
+const StyledDeleteTask = styled.button`
   color: #ea5555;
   margin-bottom: 10px;
 `;
 
-const ViewTask = ({
+interface TaskView {
+  selectedTask: Task | null;
+  calculateCompletedSubtaskCallback: (subtasks: Subtask[] | undefined) => void;
+  showModal: boolean;
+  setShowModal: (args: boolean) => void;
+  deleteTaskFunc: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    taskIndex: number,
+    column: Column
+  ) => void;
+  editTaskFunc: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    taskIndex: number,
+    column: Column,
+    selectedTask: Task
+  ) => void;
+  column: Column | null;
+  taskIndex: number;
+}
+
+const ViewTask: React.FC<TaskView> = ({
   selectedTask,
   calculateCompletedSubtaskCallback,
   showModal,
@@ -69,14 +90,18 @@ const ViewTask = ({
 }) => {
   const [showEllipsisModal, setShowEllipsisModal] = useState(false);
 
-  const deleteTask = (e) => {
-    deleteTaskFunc(e, taskIndex, column);
-    setShowEllipsisModal(false);
+  const deleteTask = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (column !== null) {
+      deleteTaskFunc(e, taskIndex, column);
+      setShowEllipsisModal(false);
+    }
   };
 
-  const editTask = (e) => {
-    editTaskFunc(e, taskIndex, column, selectedTask);
-    setShowEllipsisModal(false);
+  const editTask = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (column !== null && selectedTask !== null) {
+      editTaskFunc(e, taskIndex, column, selectedTask);
+      setShowEllipsisModal(false);
+    }
   };
 
   const closeModal = () => {
@@ -101,14 +126,19 @@ const ViewTask = ({
             </StyledEllipsisModal>
           ) : null}
         </StyledEllipsisContainer>
-        <StyledTitle>{selectedTask.title}</StyledTitle>
-        <StyledDescription>{selectedTask.description}</StyledDescription>
+        <StyledTitle>{selectedTask?.title}</StyledTitle>
+        <StyledDescription>{selectedTask?.description}</StyledDescription>
         <div>
           <div>
-            Subtasks {calculateCompletedSubtaskCallback(selectedTask.subtasks)}{" "}
-            of {selectedTask.subtasks.length}
+            Subtasks{" "}
+            {
+              calculateCompletedSubtaskCallback(
+                selectedTask?.subtasks
+              ) as ReactNode
+            }{" "}
+            of {selectedTask?.subtasks.length}
           </div>
-          {selectedTask.subtasks.map((ele, index) => {
+          {selectedTask?.subtasks.map((ele: Subtask) => {
             return (
               <StyledCheckboxContainer>
                 <Checkbox
@@ -124,8 +154,8 @@ const ViewTask = ({
           <div>Status</div>
           <div>
             <SelectBox
-              defaultValue={selectedTask.status}
-              defaultName={selectedTask.status}
+              defaultValue={selectedTask?.status}
+              defaultName={selectedTask?.status}
             />
           </div>
         </div>

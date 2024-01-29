@@ -31,8 +31,8 @@ const StyledCloseButton = styled.div`
 interface EditTask {
   showEditModal: boolean;
   selectedTask: Task | null;
-  editData: EditData | null;
-  calculateStatusArray: () => {};
+  editData: EditData | undefined;
+  calculateStatusArray: () => string[];
   setShowEditModal: (args: boolean) => void;
 }
 
@@ -49,7 +49,7 @@ const EditTask: React.FC<EditTask> = ({
 
   const themeContextValue = useContext(ThemeContext);
 
-  const [selectedTask, setCurrentTask] = useState<Task | null>(null););
+  const [selectedTask, setCurrentTask] = useState<Task | null>(null);
 
   useEffect(() => {
     setCurrentTask(currentTask);
@@ -69,11 +69,12 @@ const EditTask: React.FC<EditTask> = ({
   const saveTaskChanges = () => {
     if (boardContextValue != null) {
       const { editTask } = boardContextValue;
-      editTask({
-        ...editData,
-        newColumn: status,
-        selectedTaskObj: selectedTask,
-      });
+      if (editData !== undefined)
+        editTask({
+          ...editData,
+          newColumn: status,
+          selectedTaskObj: selectedTask,
+        });
       closeModal();
     }
   };
@@ -88,12 +89,14 @@ const EditTask: React.FC<EditTask> = ({
           <div style={{ marginBottom: "10px" }}>
             <Textbox
               value={selectedTask?.title}
-              onChange={(e) =>
-                setCurrentTask({ ...selectedTask, title: e.target.value })
-              }
+              onChange={(e) => {
+                if (selectedTask !== null) {
+                  setCurrentTask({ ...selectedTask, title: e.target.value });
+                }
+              }}
             />
           </div>
-          {selectedTask.description && (
+          {selectedTask?.description && (
             <div style={{ marginBottom: "10px" }}>
               <textarea
                 style={{
@@ -128,8 +131,8 @@ const EditTask: React.FC<EditTask> = ({
           <div>
             <SelectBox
               onChange={(e) => setStatus(e.target.value)}
-              defaultValue={selectedTask.status}
-              defaultName={selectedTask.status}
+              defaultValue={selectedTask?.status}
+              defaultName={selectedTask?.status}
               optionList={statusList}
             />
           </div>

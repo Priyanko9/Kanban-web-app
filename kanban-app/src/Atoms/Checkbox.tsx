@@ -1,4 +1,4 @@
-import React,{ useState,InputHTMLAttributes } from "react";
+import React, { useState, InputHTMLAttributes } from "react";
 import styled from "styled-components";
 import { ReactComponent as CheckmarkSvg } from "../assets/icon-check.svg";
 
@@ -19,9 +19,9 @@ const StyledSvgContainer = styled.span`
   left: 6px;
 `;
 
-interface StyledTextProps{
-  checked:boolean;
-  strikeThrough:boolean;
+interface StyledTextProps {
+  checked: boolean;
+  strikeThrough: boolean;
 }
 
 const StyledText = styled.span<StyledTextProps>`
@@ -31,14 +31,19 @@ const StyledText = styled.span<StyledTextProps>`
     props.checked && props.strikeThrough ? "line-through" : "none"};
 `;
 
-interface CheckboxProps{
+interface CheckboxProps {
   textLabel: string;
   strikeThrough: boolean;
   checkedState?: boolean;
-  inputProps: InputHTMLAttributes<HTMLInputElement>;
+  inputProps?: InputHTMLAttributes<HTMLInputElement>;
 }
 
-const Checkbox:React.FC<CheckboxProps> = ({ textLabel, strikeThrough, checkedState, inputProps }) => {
+const Checkbox: React.FC<CheckboxProps> = ({
+  textLabel,
+  strikeThrough,
+  checkedState,
+  inputProps,
+}) => {
   const [checked, setIsChecked] = useState(checkedState || false);
   return (
     <>
