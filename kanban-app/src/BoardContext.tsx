@@ -1,24 +1,24 @@
-import  { createContext, useReducer,ReactNode, useMemo } from "react";
+import { createContext, useReducer, ReactNode, useMemo } from "react";
 import { BoardReducer, initialState } from "./BoardReducer";
-import {Task,Column,Board} from "./types";
+import { Task, Column, Board } from "./types";
 
 interface EditPayload {
-  selectedTaskIndex:number;
-  selectedBoardName:string;
-  selectedColumn:Column|null;
-  newColumn:string;
-  selectedTaskObj:Task|null;
+  selectedTaskIndex: number;
+  selectedBoardName: string;
+  selectedColumn: Column | null;
+  newColumn: string;
+  selectedTaskObj: Task | null;
 }
 
 interface DeletePayload {
-  selectedTaskIndex:number;
-  selectedBoardName:string;
-  selectedColumn:Column;
+  selectedTaskIndex: number;
+  selectedBoardName: string;
+  selectedColumn: Column;
 }
 interface BoardCtx {
   fetchBoard: Function;
   state: typeof initialState;
-  editTask: (payload:EditPayload)=>void;
+  editTask: (payload: EditPayload) => void;
   deleteTask: Function;
   addNewTask: Function;
   createNewBoard: Function;
@@ -30,14 +30,12 @@ interface Props {
   children?: ReactNode;
 }
 
-
-
 export const BoardContext = createContext<BoardCtx | null>(null);
 
-export const BoardProvider = ({ children }:Props) => {
+export const BoardProvider = ({ children }: Props) => {
   const [state, dispatch] = useReducer(BoardReducer, initialState);
 
-  const fetchBoard = (selectedBoard: number|null) => {
+  const fetchBoard = (selectedBoard: number | null) => {
     dispatch({
       type: "FETCH_BOARD_DATA",
       payload: {
@@ -52,7 +50,7 @@ export const BoardProvider = ({ children }:Props) => {
     selectedColumn,
     newColumn,
     selectedTaskObj,
-  }:EditPayload) => {
+  }: EditPayload) => {
     dispatch({
       type: "EDIT_TASK",
       payload: {
@@ -69,7 +67,7 @@ export const BoardProvider = ({ children }:Props) => {
     selectedTaskIndex,
     selectedBoardName,
     selectedColumn,
-  }:DeletePayload) => {
+  }: DeletePayload) => {
     dispatch({
       type: "DELETE_TASK",
       payload: {
@@ -80,7 +78,7 @@ export const BoardProvider = ({ children }:Props) => {
     });
   };
 
-  const addNewTask = (newTask:Task) => {
+  const addNewTask = (newTask: Task) => {
     dispatch({
       type: "CREATE_NEW_TASK",
       payload: {
@@ -89,7 +87,7 @@ export const BoardProvider = ({ children }:Props) => {
     });
   };
 
-  const createNewBoard = (newBoard:Board) => {
+  const createNewBoard = (newBoard: Board) => {
     dispatch({
       type: "CREATE_NEW_BOARD",
       payload: {
@@ -104,7 +102,7 @@ export const BoardProvider = ({ children }:Props) => {
     });
   };
 
-  const editBoard = (editedBoard:Board) => {
+  const editBoard = (editedBoard: Board) => {
     dispatch({
       type: "EDIT_BOARD",
       payload: {
@@ -113,16 +111,19 @@ export const BoardProvider = ({ children }:Props) => {
     });
   };
 
-  const contextValue: BoardCtx = useMemo(()=>({
-    fetchBoard,
-    state,
-    editTask,
-    deleteTask,
-    addNewTask,
-    createNewBoard,
-    deleteBoard,
-    editBoard,
-  }),[state]);
+  const contextValue: BoardCtx = useMemo(
+    () => ({
+      fetchBoard,
+      state,
+      editTask,
+      deleteTask,
+      addNewTask,
+      createNewBoard,
+      deleteBoard,
+      editBoard,
+    }),
+    [state]
+  );
 
   return (
     <BoardContext.Provider value={contextValue}>

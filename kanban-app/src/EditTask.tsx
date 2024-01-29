@@ -6,6 +6,7 @@ import Textbox from "./Atoms/Input";
 import SelectBox from "./Atoms/Selectbox";
 import Button from "./Atoms/Button";
 import { ThemeContext } from "./App";
+import { EditData, Task } from "./types";
 
 const StyledContainer = styled.div`
   background-color: white;
@@ -27,7 +28,15 @@ const StyledCloseButton = styled.div`
   cursor: pointer;
 `;
 
-const EditTask = ({
+interface EditTask {
+  showEditModal: boolean;
+  selectedTask: Task | null;
+  editData: EditData | null;
+  calculateStatusArray: () => {};
+  setShowEditModal: (args: boolean) => void;
+}
+
+const EditTask: React.FC<EditTask> = ({
   showEditModal,
   selectedTask: currentTask,
   editData,
@@ -36,19 +45,21 @@ const EditTask = ({
 }) => {
   const [status, setStatus] = useState("");
   const statusList = calculateStatusArray();
-  const contextValue = useContext(BoardContext);
-  const { state, editTask } = contextValue;
-  const { theme } = useContext(ThemeContext);
+  const boardContextValue = useContext(BoardContext);
 
-  const [selectedTask, setCurrentTask] = useState({});
+  const themeContextValue = useContext(ThemeContext);
+
+  const [selectedTask, setCurrentTask] = useState<Task | null>(null););
 
   useEffect(() => {
     setCurrentTask(currentTask);
   }, [currentTask]);
 
-  const removeColumn = (index) => {
-    selectedTask.subtasks.splice(index, 1);
-    setCurrentTask({ ...selectedTask });
+  const removeColumn = (index: number) => {
+    if (selectedTask !== null && selectedTask !== undefined) {
+      selectedTask.subtasks.splice(index, 1);
+      setCurrentTask({ ...selectedTask });
+    }
   };
 
   const closeModal = () => {
@@ -56,64 +67,79 @@ const EditTask = ({
   };
 
   const saveTaskChanges = () => {
-    editTask({
-      ...editData,
-      newColumn: status,
-      selectedTaskObj: selectedTask,
-    });
-    closeModal();
+    if (boardContextValue != null) {
+      const { editTask } = boardContextValue;
+      editTask({
+        ...editData,
+        newColumn: status,
+        selectedTaskObj: selectedTask,
+      });
+      closeModal();
+    }
   };
-  return showEditModal ? (
-    <Modal>
-      <StyledContainer>
-        <StyledCloseButton onClick={closeModal}>X</StyledCloseButton>
-        <div style={{ marginBottom: "10px" }}>
-          <Textbox
-            value={selectedTask.title}
-            onChange={(e) =>
-              setCurrentTask({ ...selectedTask, title: e.target.value })
-            }
-          />
-        </div>
-        {selectedTask.description && (
+
+  if (themeContextValue != null) {
+    const { theme } = themeContextValue;
+
+    return showEditModal ? (
+      <Modal>
+        <StyledContainer>
+          <StyledCloseButton onClick={closeModal}>X</StyledCloseButton>
           <div style={{ marginBottom: "10px" }}>
-            <textarea
-              style={{ marginBottom: "10px", width: "300px", height: "100px" }}
-              value={selectedTask.description}
+            <Textbox
+              value={selectedTask?.title}
               onChange={(e) =>
-                setCurrentTask({ ...selectedTask, description: e.target.value })
+                setCurrentTask({ ...selectedTask, title: e.target.value })
               }
             />
           </div>
-        )}
-        <div>
-          <div>Subtasks</div>
-          {selectedTask?.subtasks?.map((ele, index) => {
-            return (
-              <StyledTextboxContainer key={ele.title}>
-                <span>
-                  <Textbox value={ele.title} />
-                </span>
-                <span onClick={() => removeColumn(index)}>X</span>
-              </StyledTextboxContainer>
-            );
-          })}
-        </div>
-        <div>Status</div>
-        <div>
-          <SelectBox
-            onChange={(e) => setStatus(e.target.value)}
-            defaultValue={selectedTask.status}
-            defaultName={selectedTask.status}
-            optionList={statusList}
-          />
-        </div>
-        <Button onClick={saveTaskChanges} theme={theme}>
-          Save
-        </Button>
-      </StyledContainer>
-    </Modal>
-  ) : null;
+          {selectedTask.description && (
+            <div style={{ marginBottom: "10px" }}>
+              <textarea
+                style={{
+                  marginBottom: "10px",
+                  width: "300px",
+                  height: "100px",
+                }}
+                value={selectedTask.description}
+                onChange={(e) =>
+                  setCurrentTask({
+                    ...selectedTask,
+                    description: e.target.value,
+                  })
+                }
+              />
+            </div>
+          )}
+          <div>
+            <div>Subtasks</div>
+            {selectedTask?.subtasks?.map((ele, index) => {
+              return (
+                <StyledTextboxContainer key={ele.title}>
+                  <span>
+                    <Textbox value={ele.title} />
+                  </span>
+                  <span onClick={() => removeColumn(index)}>X</span>
+                </StyledTextboxContainer>
+              );
+            })}
+          </div>
+          <div>Status</div>
+          <div>
+            <SelectBox
+              onChange={(e) => setStatus(e.target.value)}
+              defaultValue={selectedTask.status}
+              defaultName={selectedTask.status}
+              optionList={statusList}
+            />
+          </div>
+          <Button onClick={saveTaskChanges} theme={theme}>
+            Save
+          </Button>
+        </StyledContainer>
+      </Modal>
+    ) : null;
+  }
 };
 
 export default EditTask;

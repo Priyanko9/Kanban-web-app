@@ -1,13 +1,18 @@
 import styled from "styled-components";
 import { useContext, useState, useCallback } from "react";
-import { Droppable, Draggable, DragDropContext, DropResult  } from "react-beautiful-dnd";
+import {
+  Droppable,
+  Draggable,
+  DragDropContext,
+  DropResult,
+} from "react-beautiful-dnd";
 import { ThemeContext } from "./App";
 import { BoardContext } from "./BoardContext";
 import ViewTask from "./ViewTask";
 import EditTask from "./EditTask";
-import {Task,Column,Board,Subtask} from "./types";
+import { Task, Column, Board, Subtask, EditData } from "./types";
 
-const getBgColor = (name:string) => {
+const getBgColor = (name: string) => {
   if (name === "Todo") {
     return "#49c4e5";
   } else if (name === "Doing") {
@@ -40,7 +45,7 @@ const StyledColumnName = styled.div`
   align-items: center;
 `;
 
-interface SignalProps{
+interface SignalProps {
   name: string;
 }
 const StyledSignal = styled.div<SignalProps>`
@@ -51,10 +56,10 @@ const StyledSignal = styled.div<SignalProps>`
   margin-right: 5px;
 `;
 
-interface ColumnContainer{
-  snapshot :{
-    isDraggingOver:boolean
-  }
+interface ColumnContainer {
+  snapshot: {
+    isDraggingOver: boolean;
+  };
 }
 const StyledColumnContainer = styled.div<ColumnContainer>`
   margin-left: 10px;
@@ -78,7 +83,7 @@ const StyledEdit = styled.div`
   margin-top: 10px;
 `;
 
-const calculateCompletedSubtask = (subtasks:Subtask[]) => {
+const calculateCompletedSubtask = (subtasks: Subtask[]) => {
   let count = 0;
   subtasks.forEach((subtask) => {
     if (subtask.isCompleted) {
@@ -88,63 +93,56 @@ const calculateCompletedSubtask = (subtasks:Subtask[]) => {
   return count;
 };
 
-interface EditData {
-  selectedTaskIndex: number;
-        selectedBoardName:string;
-        selectedColumn:Column;
-        selectedTaskObj:Task;
-} 
-  
-
 const BoardContent = () => {
   const ThemeContextValue = useContext(ThemeContext);
- 
+
   const contextValue = useContext(BoardContext);
-  
-  
+
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task|null>(null);
-  const [editData, setEditData] = useState<EditData|null>(null);
-  const [selectedColumn, setSelectedColumn] = useState<Column|null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [editData, setEditData] = useState<EditData | null>(null);
+  const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
   const [taskIndex, setTaskIndex] = useState(0);
 
-  const calculateCompletedSubtaskCallback = useCallback((subtasks:Subtask[]) => {
-    calculateCompletedSubtask(subtasks);
-  }, []);
-  if(contextValue !==null && ThemeContextValue!==null){
+  const calculateCompletedSubtaskCallback = useCallback(
+    (subtasks: Subtask[]) => {
+      calculateCompletedSubtask(subtasks);
+    },
+    []
+  );
+  if (contextValue !== null && ThemeContextValue !== null) {
     const { state, editTask, deleteTask } = contextValue;
     const { selectedBoard } = state || {};
-   
 
     const calculateStatusArray = () => {
-      const statusList:Array<string> = [];
+      const statusList: Array<string> = [];
       selectedBoard?.columns?.forEach((column, i) => {
         statusList.push(column.name);
       });
       return statusList;
     };
-    const onTaskClick = (task:Task, column:Column, index:number) => {
+    const onTaskClick = (task: Task, column: Column, index: number) => {
       setShowModal(true);
       setSelectedTask(task);
       setSelectedColumn(column);
       setTaskIndex(index);
     };
-    const mouseDown = (task:Task, column:Column) => {
+    const mouseDown = (task: Task, column: Column) => {
       setSelectedTask(task);
       setSelectedColumn(column);
     };
-    
+
     const onTaskEdit = ({
       selectedTaskIndex,
       selectedBoardName,
       selectedColumn,
       selectedTaskObj,
-    }:{
+    }: {
       selectedTaskIndex: number;
-      selectedBoardName:string;
-      selectedColumn:Column;
-      selectedTaskObj:Task;
+      selectedBoardName: string;
+      selectedColumn: Column;
+      selectedTaskObj: Task;
     }) => {
       setShowEditModal(true);
 
@@ -155,9 +153,12 @@ const BoardContent = () => {
         selectedTaskObj,
       });
     };
-    
 
-    const deleteTaskFunc = (e:React.MouseEvent<HTMLButtonElement>, index:number, column:Column) => {
+    const deleteTaskFunc = (
+      e: React.MouseEvent<HTMLButtonElement>,
+      index: number,
+      column: Column
+    ) => {
       e.stopPropagation();
       deleteTask({
         selectedTaskIndex: index,
@@ -167,19 +168,24 @@ const BoardContent = () => {
       setShowModal(false);
     };
 
-    const editTaskFunc = (e:React.MouseEvent<HTMLButtonElement>, index:number, column:Column, task:Task) => {
+    const editTaskFunc = (
+      e: React.MouseEvent<HTMLButtonElement>,
+      index: number,
+      column: Column,
+      task: Task
+    ) => {
       e.stopPropagation();
       setSelectedTask(task);
       onTaskEdit({
         selectedTaskIndex: index,
-        selectedBoardName: selectedBoard?.name||"",
+        selectedBoardName: selectedBoard?.name || "",
         selectedColumn: column,
         selectedTaskObj: task,
       });
       setShowModal(false);
     };
 
-    const dragEnd = (result:DropResult) => {
+    const dragEnd = (result: DropResult) => {
       const { destination, source } = result;
 
       if (!destination) {
@@ -199,98 +205,97 @@ const BoardContent = () => {
       setSelectedTask(null);
       setSelectedColumn(null);
     };
-  
 
-  if (selectedBoard?.columns?.length === 0) {
+    if (selectedBoard?.columns?.length === 0) {
+      return (
+        <div>
+          <div>The Board is empty.Create a new column to get started</div>
+          <div>+ Add New Column</div>
+        </div>
+      );
+    }
+    const { theme } = ThemeContextValue;
     return (
       <div>
-        <div>The Board is empty.Create a new column to get started</div>
-        <div>+ Add New Column</div>
+        <DragDropContext onDragEnd={dragEnd}>
+          <StyledTaskTile theme={theme}>
+            {selectedBoard?.columns?.map((column, i) => {
+              return (
+                <Droppable droppableId={column.name} key={column.name}>
+                  {(provided, snapshot) => (
+                    <StyledColumnContainer
+                      key={column.name}
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      snapshot={snapshot}
+                    >
+                      <StyledColumnName>
+                        <StyledSignal name={column.name} />
+                        <div>
+                          {column.name} ({column?.tasks.length})
+                        </div>
+                      </StyledColumnName>
+                      {column?.tasks?.map((task, index) => {
+                        const completedTask = calculateCompletedSubtask(
+                          task.subtasks
+                        );
+                        return (
+                          <Draggable
+                            draggableId={task.title}
+                            index={index}
+                            key={task.title}
+                          >
+                            {(provided) => (
+                              <StyledTaskTitle
+                                onClick={() => onTaskClick(task, column, index)}
+                                onMouseDown={() => mouseDown(task, column)}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                ref={provided.innerRef}
+                                key={task.title}
+                              >
+                                <StyledTaskContainer>
+                                  <div>
+                                    <b>{task.title}</b>
+                                  </div>
+                                  <StyledSubTask>
+                                    {completedTask} of {task.subtasks.length}{" "}
+                                    subtasks
+                                  </StyledSubTask>
+                                </StyledTaskContainer>
+                              </StyledTaskTitle>
+                            )}
+                          </Draggable>
+                        );
+                      })}
+                      {provided.placeholder}
+                    </StyledColumnContainer>
+                  )}
+                </Droppable>
+              );
+            })}
+          </StyledTaskTile>
+        </DragDropContext>
+        <ViewTask
+          calculateCompletedSubtaskCallback={calculateCompletedSubtaskCallback}
+          selectedTask={selectedTask}
+          showModal={showModal}
+          setShowModal={setShowModal}
+          taskIndex={taskIndex}
+          column={selectedColumn}
+          editTaskFunc={editTaskFunc}
+          deleteTaskFunc={deleteTaskFunc}
+        />
+        <EditTask
+          showEditModal={showEditModal}
+          selectedTask={selectedTask}
+          editData={editData}
+          calculateStatusArray={calculateStatusArray}
+          setShowEditModal={setShowEditModal}
+        />
       </div>
     );
   }
-  const {theme}=ThemeContextValue;
-  return (
-    <div>
-      <DragDropContext onDragEnd={dragEnd}>
-        <StyledTaskTile theme={theme}>
-          {selectedBoard?.columns?.map((column, i) => {
-            return (
-              <Droppable droppableId={column.name} key={column.name}>
-                {(provided, snapshot) => (
-                  <StyledColumnContainer
-                    key={column.name}
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    snapshot={snapshot}
-                  >
-                    <StyledColumnName>
-                      <StyledSignal name={column.name} />
-                      <div>
-                        {column.name} ({column?.tasks.length})
-                      </div>
-                    </StyledColumnName>
-                    {column?.tasks?.map((task, index) => {
-                      const completedTask = calculateCompletedSubtask(
-                        task.subtasks
-                      );
-                      return (
-                        <Draggable
-                          draggableId={task.title}
-                          index={index}
-                          key={task.title}
-                        >
-                          {(provided) => (
-                            <StyledTaskTitle
-                              onClick={() => onTaskClick(task, column, index)}
-                              onMouseDown={() => mouseDown(task, column)}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              ref={provided.innerRef}
-                              key={task.title}
-                            >
-                              <StyledTaskContainer>
-                                <div>
-                                  <b>{task.title}</b>
-                                </div>
-                                <StyledSubTask>
-                                  {completedTask} of {task.subtasks.length}{" "}
-                                  subtasks
-                                </StyledSubTask>
-                              </StyledTaskContainer>
-                            </StyledTaskTitle>
-                          )}
-                        </Draggable>
-                      );
-                    })}
-                    {provided.placeholder}
-                  </StyledColumnContainer>
-                )}
-              </Droppable>
-            );
-          })}
-        </StyledTaskTile>
-      </DragDropContext>
-      <ViewTask
-        calculateCompletedSubtaskCallback={calculateCompletedSubtaskCallback}
-        selectedTask={selectedTask}
-        showModal={showModal}
-        setShowModal={setShowModal}
-        taskIndex={taskIndex}
-        column={selectedColumn}
-        editTaskFunc={editTaskFunc}
-        deleteTaskFunc={deleteTaskFunc}
-      />
-      <EditTask
-        showEditModal={showEditModal}
-        selectedTask={selectedTask}
-        editData={editData}
-        calculateStatusArray={calculateStatusArray}
-        setShowEditModal={setShowEditModal}
-      />
-    </div>
-  );
-        }
 };
 
 export default BoardContent;

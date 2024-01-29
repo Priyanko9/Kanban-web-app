@@ -24,3 +24,10 @@ export interface Board {
 export interface BackendData {
   boards: Board[];
 }
+
+export interface EditData {
+  selectedTaskIndex: number;
+  selectedBoardName: string;
+  selectedColumn: Column;
+  selectedTaskObj: Task;
+}
