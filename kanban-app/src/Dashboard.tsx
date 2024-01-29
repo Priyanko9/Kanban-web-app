@@ -69,71 +69,72 @@ const StyledDeleteTask = styled.div`
   margin-bottom: 10px;
 `;
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteBoardModal, setShowDeleteBoardModal] = useState(false);
   const [showEllipsisModal, setShowEllipsisModal] = useState(false);
-  const boardCtx=useContext(BoardContext);
-  const themeCtx=useContext(ThemeContext);
-  if(boardCtx!=null && themeCtx!=null) {
-  
-  const {
-    state: { selectedBoard },
-  } = boardCtx
+  const boardCtx = useContext(BoardContext);
+  const themeCtx = useContext(ThemeContext);
+  if (boardCtx != null && themeCtx != null) {
+    const {
+      state: { selectedBoard },
+    } = boardCtx;
 
+    const { theme } = themeCtx;
 
-  const { theme } = themeCtx
+    return (
+      <>
+        <StyledContainer>
+          <StyledSidebar>
+            <BoardsSidebar />
+          </StyledSidebar>
+          <StyledMainContainer>
+            <StyledHeader>
+              <StyledBoardName>{selectedBoard?.name}</StyledBoardName>
+              <StyledBoardFunctions>
+                <Button theme={theme} onClick={() => setShowAddModal(true)}>
+                  + Add New Task
+                </Button>
 
-  return (
-    <StyledContainer>
-      <StyledSidebar>
-        <BoardsSidebar />
-      </StyledSidebar>
-      <StyledMainContainer>
-        <StyledHeader>
-          <StyledBoardName>{selectedBoard?.name}</StyledBoardName>
-          <StyledBoardFunctions>
-            <Button theme={theme} onClick={() => setShowAddModal(true)}>
-              + Add New Task
-            </Button>
-
-            <StyledEllipsisContainer
-              onClick={() => setShowEllipsisModal(!showEllipsisModal)}
-            >
-              <EllipsisSvg />
-              {showEllipsisModal ? (
-                <StyledEllipsisModal>
-                  <StyledDeleteTask
-                    onClick={() => setShowDeleteBoardModal(true)}
-                  >
-                    Delete Board
-                  </StyledDeleteTask>
-                  <StyledEditTask onClick={() => setShowEditModal(true)}>
-                    Edit Board
-                  </StyledEditTask>
-                </StyledEllipsisModal>
-              ) : null}
-            </StyledEllipsisContainer>
-          </StyledBoardFunctions>
-        </StyledHeader>
-        <BoardContent />
-      </StyledMainContainer>
-      <AddNewTask
-        setShowAddModal={setShowAddModal}
-        showAddModal={showAddModal}
-      />
-      <DeleteBoardModal
-        showDeleteBoardModal={showDeleteBoardModal}
-        setShowDeleteBoardModal={setShowDeleteBoardModal}
-      />
-      <EditBoardModal
-        editBoardModal={showEditModal}
-        setEditBoardModal={setShowEditModal}
-      />
-    </StyledContainer>
-  );
+                <StyledEllipsisContainer
+                  onClick={() => setShowEllipsisModal(!showEllipsisModal)}
+                >
+                  <EllipsisSvg />
+                  {showEllipsisModal ? (
+                    <StyledEllipsisModal>
+                      <StyledDeleteTask
+                        onClick={() => setShowDeleteBoardModal(true)}
+                      >
+                        Delete Board
+                      </StyledDeleteTask>
+                      <StyledEditTask onClick={() => setShowEditModal(true)}>
+                        Edit Board
+                      </StyledEditTask>
+                    </StyledEllipsisModal>
+                  ) : null}
+                </StyledEllipsisContainer>
+              </StyledBoardFunctions>
+            </StyledHeader>
+            <BoardContent />
+          </StyledMainContainer>
+          <AddNewTask
+            setShowAddModal={setShowAddModal}
+            showAddModal={showAddModal}
+          />
+          <DeleteBoardModal
+            showDeleteBoardModal={showDeleteBoardModal}
+            setShowDeleteBoardModal={setShowDeleteBoardModal}
+          />
+          <EditBoardModal
+            editBoardModal={showEditModal}
+            setEditBoardModal={setShowEditModal}
+          />
+        </StyledContainer>
+      </>
+    );
   }
+  return null;
 };
 
 export default Dashboard;

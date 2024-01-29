@@ -10,7 +10,7 @@ import { ThemeContext } from "./App";
 import { BoardContext } from "./BoardContext";
 import ViewTask from "./ViewTask";
 import EditTask from "./EditTask";
-import { Task, Column, Board, Subtask, EditData } from "./types";
+import { Task, Column, Subtask, EditData } from "./types";
 
 const getBgColor = (name: string) => {
   if (name === "Todo") {
@@ -79,10 +79,6 @@ const StyledSubTask = styled.div`
   margin-top: 10px;
 `;
 
-const StyledEdit = styled.div`
-  margin-top: 10px;
-`;
-
 const calculateCompletedSubtask = (subtasks: Subtask[] | undefined) => {
   let count = 0;
   subtasks?.forEach((subtask) => {
@@ -93,7 +89,7 @@ const calculateCompletedSubtask = (subtasks: Subtask[] | undefined) => {
   return count;
 };
 
-const BoardContent = () => {
+const BoardContent: React.FC = () => {
   const ThemeContextValue = useContext(ThemeContext);
 
   const contextValue = useContext(BoardContext);
@@ -296,6 +292,7 @@ const BoardContent = () => {
       </div>
     );
   }
+  return null;
 };
 
 export default BoardContent;

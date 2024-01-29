@@ -103,6 +103,7 @@ const AddNewBoard: React.FC<AddNewBoardProps> = ({
       </Modal>
     ) : null;
   }
+  return null;
 };
 
 export default AddNewBoard;

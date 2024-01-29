@@ -100,6 +100,7 @@ const EditBoard: React.FC<EditBoard> = ({
       </Modal>
     ) : null;
   }
+  return null;
 };
 
 export default EditBoard;

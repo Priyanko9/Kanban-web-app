@@ -8,6 +8,7 @@ import { ThemeContext } from "./App";
 import { BoardContext } from "./BoardContext";
 import AddNewBoard from "./AddNewBoard";
 import { Board } from "./types";
+import Checkbox from "./Atoms/Checkbox";
 
 type StyledBoardContainerProps = {
   selected?: boolean;
@@ -100,11 +101,14 @@ const BoardsSidebar: React.FC = () => {
             addBoardModal={addBoardModal}
             setAddBoardModal={setAddBoardModal}
           />
+          <div>
+            <input type="checkbox" />
+          </div>
         </div>
       );
     }
   }
-  //   return <div></div>;
+  return null;
 };
 
 export default BoardsSidebar;

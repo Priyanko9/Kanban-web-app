@@ -56,6 +56,7 @@ const DeleteBoardModal: React.FC<{
       </Modal>
     ) : null;
   }
+  return null;
 };
 
 export default DeleteBoardModal;

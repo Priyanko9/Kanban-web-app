@@ -110,58 +110,61 @@ const AddNewTask: React.FC<AddNewTaskProps> = ({
     const { theme } = themeContext;
 
     return showAddModal ? (
-      <Modal>
-        <StyledModalContainer>
-          <h2>Add New Task</h2>
-          <div>
-            <label>Title</label>
-            <br />
-            <Textbox onChange={onChangeTitle} isError={titleError} />
-          </div>
-          <div>
-            <label>Description</label>
-            <br />
-            <textarea
-              onChange={(e) => setDescription(e.target.value)}
-              style={{ width: "500px", height: "100px" }}
-            />
-          </div>
-          <div>
-            <label>Subtasks</label>
-            {subtasks.map((ele, i) => {
-              return (
-                <div key={ele.title}>
-                  {ele.title ? (
-                    <Textbox value={ele.title} />
-                  ) : (
-                    <Textbox
-                      onChange={(e) => addSubtaskName(e.target.value)}
-                      isError={ele.isError}
-                    />
-                  )}
-
-                  <span onClick={() => removeSubtask(i)}>X</span>
-                </div>
-              );
-            })}
-            <Button onClick={addNewSubtask} theme={theme} isSecondary>
-              Create New Subtask
-            </Button>
-          </div>
-          <div>
-            <div>Status</div>
+      <>
+        <Modal>
+          <StyledModalContainer>
+            <h2>Add New Task</h2>
             <div>
-              <SelectBox defaultValue="Todo" defaultName="Todo" />
+              <label>Title</label>
+              <br />
+              <Textbox onChange={onChangeTitle} isError={titleError} />
             </div>
-          </div>
-          <Button onClick={() => createNewTask()} theme={theme}>
-            Create Task
-          </Button>
-          <StyledCloseModal onClick={closeModal}>X</StyledCloseModal>
-        </StyledModalContainer>
-      </Modal>
+            <div>
+              <label>Description</label>
+              <br />
+              <textarea
+                onChange={(e) => setDescription(e.target.value)}
+                style={{ width: "500px", height: "100px" }}
+              />
+            </div>
+            <div>
+              <label>Subtasks</label>
+              {subtasks.map((ele, i) => {
+                return (
+                  <div key={ele.title}>
+                    {ele.title ? (
+                      <Textbox value={ele.title} />
+                    ) : (
+                      <Textbox
+                        onChange={(e) => addSubtaskName(e.target.value)}
+                        isError={ele.isError}
+                      />
+                    )}
+
+                    <span onClick={() => removeSubtask(i)}>X</span>
+                  </div>
+                );
+              })}
+              <Button onClick={addNewSubtask} theme={theme} isSecondary>
+                Create New Subtask
+              </Button>
+            </div>
+            <div>
+              <div>Status</div>
+              <div>
+                <SelectBox defaultValue="Todo" defaultName="Todo" />
+              </div>
+            </div>
+            <Button onClick={() => createNewTask()} theme={theme}>
+              Create Task
+            </Button>
+            <StyledCloseModal onClick={closeModal}>X</StyledCloseModal>
+          </StyledModalContainer>
+        </Modal>
+      </>
     ) : null;
   }
+  return null;
 };
 
 export default AddNewTask;

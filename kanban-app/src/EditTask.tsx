@@ -143,6 +143,7 @@ const EditTask: React.FC<EditTask> = ({
       </Modal>
     ) : null;
   }
+  return null;
 };
 
 export default EditTask;
